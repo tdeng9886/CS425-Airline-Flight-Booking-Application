@@ -32,7 +32,7 @@ CHECK (poorPrice < richPrice)
 ### Expecting post body like:
 ```json
 {
-	flightIds: [
+	"flightIds": [
 		34123412341234123,421341243132412,1434213412
 	]
 }
