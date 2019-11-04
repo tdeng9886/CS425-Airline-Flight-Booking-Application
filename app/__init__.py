@@ -1,3 +1,3 @@
 from flask import Flask
 app = Flask(__name__)
-from app import routes
+from app.routes import booking_routes, customer_routes
