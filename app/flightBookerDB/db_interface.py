@@ -41,16 +41,16 @@ def deleteCustomerAddress(addressId, customerId):
     return bool(rows_deleted)
 
 def createBooking (flightId,customerId):
-	 c.execute(" INSERT INTO bookings VALUE(?,?)", (
-		flightId,
-		customerId)
-	 )
-	 return True
+    c.execute(" INSERT INTO bookings VALUE(?,?)", (
+	flightId,
+	customerId)
+    )
+    return True
 
 def getBooking(customerId):
-	return list(c.execute("SELECT * FROM bookings WHERE customerId = ?", customerId))
+    return list(c.execute("SELECT * FROM bookings WHERE customerId = ?", customerId))
 
 def deleteBooking(bookingId):
-	c.execute("DELETE FROM bookings WHERE bookingId = ?",bookingId)
-	rows_deleted = c.rowcount
+    c.execute("DELETE FROM bookings WHERE bookingId = ?",bookingId)
+    rows_deleted = c.rowcount
     return bool(rows_deleted)
