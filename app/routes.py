@@ -19,10 +19,11 @@ def createCustomer():
     inputValidation = inputValidation and db_interface.checkEmail(email)
 
     if inputValidation:
-        db_interface.createCustomer(name, email, password)
+        customerId = db_interface.createCustomer(name, email, password)
 
         return {
             'result': True,
+            'customerId': customerId,
             'message': 'Customer has been created.'
         }
 
@@ -52,4 +53,30 @@ def addCustomerAddress():
     return {
         'result': True,
         'message': 'Customer address added.'
+    }
+
+@app.route('/customer/address/get', methods=['POST'])
+def getCustomerAddress():
+    customerId = request.headers.get('customerId')
+    customerAddresses = db_interface.getCustomerAddresses(customerId)
+    if customerAddresses:
+        return {
+            'result': True,
+            'addresses': customerAddresses
+        }
+    return {
+        'result': False
+    }
+
+@app.route('/customer/address/delete', methods=['POST'])
+def deleteCustomerAddress():
+    customerId = request.headers.get('customerId')
+    data = request.json
+    addressId = data['addressId']
+    if deleteCustomerAddress(addressId, customerId):
+        return {
+            'result': True
+        }
+    return {
+        'result': False
     }
