@@ -42,8 +42,8 @@ def deleteCustomerAddress(addressId, customerId):
 
 def createBooking (flightId,customerId):
     c.execute(" INSERT INTO bookings VALUE(?,?)", (
-	flightId,
-	customerId)
+	customerId,
+	flightId)
     )
     return True
 
