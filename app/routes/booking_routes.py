@@ -13,7 +13,7 @@ def createBooking():
     db_interface.createBooking(customerId, flightId)
 
     return {
-        'result':True,
+        'result': True,
         'message': 'New bookings has been added.'
     }
 
