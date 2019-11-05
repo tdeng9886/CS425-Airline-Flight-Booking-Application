@@ -1,0 +1,48 @@
+<!doctype html> 
+<html>
+	<!-- this page will likely be embedded somewhere else -->
+	<head>
+		<title>Sign in • FlightCity425</title>
+		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
+		<link rel="stylesheet" href="main.css" />
+		<script src="main.js"></script>
+	</head>
+	<body>
+		<form>
+			Email: <input type="email" id="email-input" />
+			Password: <input type="password" id="password-input" />
+			<input type="button" onclick="submit"  />
+		</form>
+		<script>
+		
+			async function logUserIn(email, password) {
+				const resp = await fetch("http://dvtate.com:4250", {
+					method: 'POST',
+					headers: {
+					  'Accept': 'application/json',
+					  'Content-Type': 'application/json'
+					},
+					body: { email, password }
+				});
+				const { token } = await resp.json();
+				
+				(function setCookie(cname, cvalue, exdays) {
+					var d = new Date();
+					d.setTime(d.getTime() + (exdays*24*60*60*1000));
+					var expires = "expires="+ d.toUTCString();
+					document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+				})("authToken", token, 1/12);				
+				
+			}
+			
+			
+			async function sendCreds() {
+				const email = document.getElementById("email-input").value;
+				const password = document.getElementById("password-input").value;
+				await logUserIn(email, password);
+				// redirect to homepage
+				window.location = '/';
+			}
+		</script>
+	</body>
+</html>
