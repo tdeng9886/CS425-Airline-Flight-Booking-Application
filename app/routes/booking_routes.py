@@ -3,7 +3,7 @@ from app.flightBookerDB import db_interface
 from flask import request
 
 
-@app.route('bookings/add', methods=['POST'])
+@app.route('/bookings/add', methods=['POST'])
 def createBooking():
     customerId = request.headers.get('customerId')
     data = request.json
@@ -18,7 +18,7 @@ def createBooking():
     }
 
 
-@app.route('bookings/get', methods=['POST'])
+@app.route('/bookings/get', methods=['POST'])
 def getBooking():
     customerId = request.headers.get('customerId')
     booking = db_interface.getBooking(customerId)
@@ -32,7 +32,7 @@ def getBooking():
     }
 
 
-@app.route('bookings/delete', methods=['POST'])
+@app.route('/bookings/delete', methods=['POST'])
 def deleteBooking():
     customerId = request.headers.get('customerId')
     data = request.json

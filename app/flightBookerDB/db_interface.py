@@ -1,6 +1,6 @@
 import psycopg2
 
-conn = psycopg2.connect(dbname='flightBooker', user='flightBooker', password='hunter2')
+conn = psycopg2.connect(dbname='flights425', user='postgres', password='space')
 conn.autocommit = True
 c = conn.cursor
 
