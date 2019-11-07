@@ -5,18 +5,6 @@ conn.autocommit = True
 from app.auth import hashPassword
 
 
-def createCustomer(name, email, password):
-    c = conn.cursor()
-    customer_id = c.execute("""
-        INSERT INTO customers
-        VALUES (?, ?, ?)
-        RETURNING customerId""", (name, email, password)).fetchone()
-
-    c.execute("UPDATE customers SET password=? WHERE customerId=?;", 
-        (hashPassword(customer_id, password), customer_id))
-    c.close()
-
-
 
 def checkEmail(email):  # Returns True if email not in DB, False if it is.
     c = conn.cursor()

@@ -1,5 +1,5 @@
 from app import app
-import app.auth as auth
+from app.auth import hashPassword, generateToken, loginUser
 from app.flightBookerDB import db_interface
 from flask import request
 import re
@@ -10,6 +10,17 @@ def login():
     data = request.json
     email = data['email']
     password = data['password']
+    token = loginUser(email,password)
+
+    if not token:
+        return {
+            'message' : 'Invalid credentials'
+        }, 401
+    else:
+        return {
+            'token' : token
+        }
+
 
 @app.route('/customer/create', methods=['POST'])
 def createCustomer():
@@ -18,33 +29,43 @@ def createCustomer():
     email = data['email']
     password = data['password']
 
+
+
     # Allow throwing errors (i.e., no email, no password, etc.)
     def isValidEmail(email):
         if len(email) > 7:
             return re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None
     
-    if (not isValidEmail(email)):
+    if not isValidEmail(email):
         return {
             'result' : False,
             'message' : 'Invalid email'
-        }
+        }, 400
 
-    # Checking email
-    error = db_interface.checkEmail(email)
+    c = db_interface.conn.cursor()
 
-    if not error:
-        customerId = db_interface.createCustomer(name, email, password)
+    if db_interface.checkEmail(email):
         return {
-            'result': True,
-            'customerId': customerId,
-            'message': 'Customer has been created.'
-        }
+            'result' : False,
+            'message' : 'email already in use'
+        }, 400
 
-    else:
-        return {
-            'result': False,
-            'message': f'The following things failed: {error}.'
-        }
+    customer_id = c.execute("""
+        INSERT INTO customers
+        VALUES (?, ?, ?)
+        RETURNING customerId""", (name, email, password)).fetchone()
+
+    authToken = generateToken(customer_id)
+    c.execute("UPDATE customers SET password=?, authToken=? WHERE customerId=? RETURNING au;", (
+        hashPassword(customer_id, password), authToken, customer_id))
+
+    c.close()
+
+    return {
+        'result': True,
+        'authToken' : authToken,
+        'message': 'Customer has been created.'
+    }
 
 
 @app.route('/customer/address/add', methods=['POST'])

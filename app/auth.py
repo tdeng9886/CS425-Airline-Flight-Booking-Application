@@ -11,8 +11,8 @@ incomplete still... :(
 pw_salt = "Zm1ha3NsZW5kZmlsIGFlZ2Z1YWhrdXMgZm5qa3NkbmtqdmMgYW5zY3Nham5kY2FucyBkc2puY3NhamRrbmZqbjRxZm52cjM5NA=="
 
 # authtoken == 64 random letters/numbers
-def generateToken():
-    return ''.join([choice(ascii_letters + digits) for i in range(64)])
+def generateToken(customerId):
+    return str(customerId) + ''.join([choice(ascii_letters + digits) for i in range(32)])
 
 
 # sha512: salt,customerId,password
@@ -24,15 +24,17 @@ def checkUserCreds(email, password):
     c = db_interface.conn.cursor()
     r = c.execute('SELECT customerId, password FROM customers WHERE email = ?', (email, )).fetchone()
     c.close()
-    return hashPassword(r['customerId'], password) == r['password']
+    return r['customerId'] if hashPassword(r['customerId'], password) == r['password'] else False
 
 def loginUser(email, password):
-    if (not checkUserCreds(email, password)):
-        return [ 'invalid credentials' ]
+    customerId = checkUserCreds(email, password)
+    if (not customerId):
+        return False
     c = db_interface.conn.cursor()
-    c.execute('UPDATE customers set authToken=? WHERE email=?;', (generateToken(), email ))
+    token = generateToken(customerId)
+    c.execute('UPDATE customers set authToken=? WHERE email=?;', (token, email ))
     c.close()
-    return False
+    return token
 
 
 def authUser():

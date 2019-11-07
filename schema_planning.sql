@@ -5,15 +5,9 @@ CREATE TABLE customers (
 	customerId BIGINT PRIMARY KEY,
 	email VARCHAR(50) UNIQUE NOT NULL,
 	name VARCHAR(65) NOT NULL,
-	password CHAR(128) NOT NULL
+	password CHAR(128) NOT NULL,
+	authToken VARCHAR(64) UNIQUE NOT NULL
 );
-
-CREATE TABLE authTokens (
-	customerId BIGINT REFERENCES customers,
-	authToken CHAR(64) UNIQUE NOT NULL,
-	-- expiration ...
-);
-
 CREATE TABLE customerAddresses (
 	addressId BIGINT PRIMARY KEY,
 	customerId BIGINT REFERENCES customers,
