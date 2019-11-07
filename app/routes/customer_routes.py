@@ -21,7 +21,7 @@ def createCustomer():
     # Allow throwing errors (i.e., no email, no password, etc.)
     def isValidEmail(email):
         if len(email) > 7:
-        return re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None
+            return re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None
     
     if (not isValidEmail(email)):
         return {
