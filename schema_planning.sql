@@ -30,7 +30,7 @@ CREATE TABLE customerCreditCards (
 CREATE TABLE airports (
 	airportId CHAR(3) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	country VARCHAR(35) NOT NULL, 
+	country VARCHAR(35) NOT NULL,
 	state VARCHAR(35)
 );
 
@@ -50,7 +50,7 @@ CREATE TABLE flights (
 	departTime DATETIME() NOT NULL,
 	arriveTime DATETIME() NOT NULL,
 	economySeats INT NOT NULL,
-	firscClassSeats INT NOT NULL,
+	firstClassSeats INT NOT NULL,
 	UNIQUE(flightDate, flightNumber)
 );
 
