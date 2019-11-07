@@ -24,19 +24,19 @@ def login():
 
 @app.route('/customer/create', methods=['POST'])
 def createCustomer():
+    #try:
     data = request.json
     name = data['name']
     email = data['email']
     password = data['password']
 
-
-
-    # Allow throwing errors (i.e., no email, no password, etc.)
+    print('new user: ', name,',', email,',', password)
     def isValidEmail(email):
         if len(email) > 7:
             return re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None
     
     if not isValidEmail(email):
+        print('invalid email...')
         return {
             'result' : False,
             'message' : 'Invalid email'
@@ -45,6 +45,7 @@ def createCustomer():
     c = db_interface.conn.cursor()
 
     if db_interface.checkEmail(email):
+        print('email in use')
         return {
             'result' : False,
             'message' : 'email already in use'
@@ -61,6 +62,7 @@ def createCustomer():
 
     c.close()
 
+    print('created user!')
     return {
         'result': True,
         'authToken' : authToken,
