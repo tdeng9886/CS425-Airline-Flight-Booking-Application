@@ -14,6 +14,9 @@ const util = {
         }
         return "";
     },
+
+    redirect: url => window.location = url,
+    
 };
 
 // automatically check authentication, if it's invalid, redirect to login page
@@ -21,3 +24,4 @@ const util = {
     if (!util.getCookie('authToken'))
         window.location = 'login.html';
 })();
+
