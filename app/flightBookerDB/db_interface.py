@@ -40,17 +40,35 @@ def deleteCustomerAddress(addressId, customerId):
     rows_deleted = c.rowcount
     return bool(rows_deleted)
 
-def createBooking (flightId,customerId):
+
+def createBooking(flightId, customerId):
     c.execute(" INSERT INTO bookings VALUE(?,?)", (
-	customerId,
-	flightId)
+            customerId,
+            flightId)
     )
     return True
+
 
 def getBooking(customerId):
     return list(c.execute("SELECT * FROM bookings WHERE customerId = ?", customerId))
 
+
 def deleteBooking(bookingId):
-    c.execute("DELETE FROM bookings WHERE bookingId = ?",bookingId)
+    c.execute("DELETE FROM bookings WHERE bookingId = ?", bookingId)
     rows_deleted = c.rowcount
     return bool(rows_deleted)
+
+
+# Airports, Flights, Routing
+def getAirports():
+    return list(c.execute("SELECT * FROM airports"))
+
+
+# Get flights coming out of an airport:
+def getFlights(departAirportID, departTime):
+    return list(c.execute("""
+        SELECT *
+        FROM flights
+        WHERE departAirportID = ?
+        AND departTime > ?
+        ORDER BY arriveTime ASC"""), (departAirportID, departTime))
