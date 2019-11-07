@@ -4,6 +4,9 @@ conn = psycopg2.connect(dbname='flights425', user='postgres', password='space')
 conn.autocommit = True
 from app.auth import hashPassword
 
+# don't forget to conn.close() and cursor.close()
+def newConnection():
+    return psycopg2.connect(dbname='flights425', user='postgres', password='space')
 
 
 def checkEmail(email):  # Returns True if email not in DB, False if it is.
@@ -13,7 +16,6 @@ def checkEmail(email):  # Returns True if email not in DB, False if it is.
         return False
     c.close()
     return True
-
 
 def addCustomerAddress(customerId, line1, line2, postalCode, city, state, country):
     c = conn.cursor()
