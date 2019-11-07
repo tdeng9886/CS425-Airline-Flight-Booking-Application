@@ -17,7 +17,7 @@ const util = {
 };
 
 // automatically check authentication, if it's invalid, redirect to login page
-(function checkAuth() {    
+(function checkAuth() {
     if (!util.getCookie('authToken'))
-        window.location = 'signin.html';
+        window.location = 'login.html';
 })();

@@ -1,7 +1,15 @@
 from app import app
+import app.auth as auth
 from app.flightBookerDB import db_interface
 from flask import request
+import re
 
+
+@app.route('/customer/login', methods=['POST'])
+def login():
+    data = request.json
+    email = data['email']
+    password = data['password']
 
 @app.route('/customer/create', methods=['POST'])
 def createCustomer():
@@ -11,16 +19,21 @@ def createCustomer():
     password = data['password']
 
     # Allow throwing errors (i.e., no email, no password, etc.)
-
-    inputValidation = True  # Placeholder.
-    error = []
+    def isValidEmail(email):
+        if len(email) > 7:
+        return re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None
+    
+    if (not isValidEmail(email)):
+        return {
+            'result' : False,
+            'message' : 'Invalid email'
+        }
 
     # Checking email
-    inputValidation = inputValidation and db_interface.checkEmail(email)
+    error = db_interface.checkEmail(email)
 
-    if inputValidation:
+    if not error:
         customerId = db_interface.createCustomer(name, email, password)
-
         return {
             'result': True,
             'customerId': customerId,
@@ -28,10 +41,9 @@ def createCustomer():
         }
 
     else:
-        error_string = ", ".join(error)
         return {
             'result': False,
-            'message': f'The following things failed: {error_string}.'
+            'message': f'The following things failed: {error}.'
         }
 
 
