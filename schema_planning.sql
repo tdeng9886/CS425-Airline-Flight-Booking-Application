@@ -1,9 +1,11 @@
 
+
+
 CREATE TABLE customers (
 	customerId BIGINT PRIMARY KEY,
 	email VARCHAR(50) UNIQUE NOT NULL,
 	name VARCHAR(65) NOT NULL,
-	password CHAR(40) NOT NULL DEFAULT '',
+	password CHAR(40) NOT NULL
 );
 
 CREATE TABLE customerAddresses (
@@ -30,14 +32,14 @@ CREATE TABLE customerCreditCards (
 CREATE TABLE airports (
 	airportId CHAR(3) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	country VARCHAR(35) NOT NULL,
+	country VARCHAR(35) NOT NULL, 
 	state VARCHAR(35)
 );
 
 CREATE TABLE airlines (
 	airlineId CHAR(2) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	country VARCHAR(35) NOT NULL,
+	country VARCHAR(35) NOT NULL
 );
 
 CREATE TABLE flights (
@@ -46,11 +48,11 @@ CREATE TABLE flights (
 	departAirportId CHAR(3) REFERENCES airports,
 	arriveAirportId CHAR(3) REFERENCES airports,
 	flightNumber INT NOT NULL,
-	flightDate DATE() NOT NULL,
-	departTime DATETIME() NOT NULL,
-	arriveTime DATETIME() NOT NULL,
+	flightDate DATE NOT NULL,
+	departTime TIMESTAMP NOT NULL,
+	arriveTime TIMESTAMP NOT NULL,
 	economySeats INT NOT NULL,
-	firstClassSeats INT NOT NULL,
+	firscClassSeats INT NOT NULL,
 	UNIQUE(flightDate, flightNumber)
 );
 
@@ -58,7 +60,7 @@ CREATE TABLE prices (
 	flightId BIGINT REFERENCES flights,
 	economyPrice NUMERIC(8,2) NOT NULL,
 	firstClassPrice NUMERIC(8,2) NOT NULL,
-	ts DATETIME NOT NULL,
+	ts TIMESTAMP NOT NULL,
 	CHECK (economyPrice < firstClassPrice)
 );
 
