@@ -65,10 +65,24 @@ def getAirports():
 
 
 # Get flights coming out of an airport:
-def getFlights(departAirportID, departTime):
+def getFlights(departAirportId, departTime):
     return list(c.execute("""
         SELECT *
         FROM flights
-        WHERE departAirportID = ?
+        WHERE departAirportId = ?
         AND departTime > ?
-        ORDER BY arriveTime ASC"""), (departAirportID, departTime))
+        ORDER BY arriveTime ASC"""), (departAirportId, departTime))
+
+# Insert data:
+
+def addAirport(airportId, name, country, state):
+    c.execute("INSERT INTO airports VALUES (?, ?, ?, ?)", (airportId, name, country, state))
+
+def addAirline(airlineId, name, country):
+    c.execute("INSERT INTO airlines VALUES (?, ?, ?)", (airlineId, name, country))
+
+def addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats):
+    c.execute("INSERT INTO flights VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats))
+
+def addPrice(flightId, economyPrice, firstClassPrice, ts):
+    c.execute("INSERT INTO flights VALUES (?, ?, ?, ?)", (flightId, economyPrice, firstClassPrice, ts))
