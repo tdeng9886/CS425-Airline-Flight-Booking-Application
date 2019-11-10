@@ -2,7 +2,7 @@ import psycopg2
 
 conn = psycopg2.connect(dbname='flights425', user='postgres', password='space')
 conn.autocommit = True
-from app.auth import hashPassword
+# from app.auth import hashPassword
 
 # don't forget to conn.close() and cursor.close()
 def newConnection():
