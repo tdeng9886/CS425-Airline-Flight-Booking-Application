@@ -76,11 +76,12 @@
 			async function logUserIn(email, password) {
 				const resp = await fetch("http://dvtate.com:4250/customer/login", {
 					method: 'POST',
+					mode: 'cors',
 					headers: {
 					  'Accept': 'application/json',
 					  'Content-Type': 'application/json'
 					},
-					body: { email, password: hashPassword(email, password) }
+					body: JSON.stringify({ email, password: hashPassword(email, password) })
 				});
 				const { token } = await resp.json();
 				if (token)
@@ -117,11 +118,12 @@
 				console.log({ email, password: hashPassword(email, password), name });
 				const resp = await fetch("http://dvtate.com:4250/customer/create", {
 					method: 'POST',
+					mode: 'cors',
 					headers: {
 					  'Accept': 'application/json',
 					  'Content-Type': 'application/json'
 					},
-					body: { email, password: hashPassword(email, password), name }
+					body: JSON.stringify({ email, password: hashPassword(email, password), name })
 				});
 				console.log({resp});
 				const r = await resp.json();
