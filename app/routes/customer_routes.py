@@ -26,7 +26,7 @@ def login():
 def createCustomer():
     #try:
     data = request.json
-    print('data:', data)
+    print('data:', data, flush=True)
     name = data['name']
     email = data['email']
     password = data['password']
@@ -36,7 +36,7 @@ def createCustomer():
         return re.match("[^@]+@[^@]+\.[^@]+", email) != None
     
     if not isValidEmail(email):
-        print('invalid email...')
+        print('invalid email...', flush=True)
         return {
             'result' : False,
             'message' : 'Invalid email'
@@ -45,7 +45,7 @@ def createCustomer():
     c = db_interface.conn.cursor()
 
     if not db_interface.checkEmail(email):
-        print('email in use')
+        print('email in use', flush=True)
         return {
             'result' : False,
             'message' : 'email already in use'
@@ -57,7 +57,7 @@ def createCustomer():
         RETURNING customerId""", (name, email, password, generateToken(-1)))
     customer_id = c.fetchone()
     customer_id = customer_id[0]
-    print("customerId: ", customer_id)
+    print("customerId: ", customer_id, flush=True)
 
     authToken = generateToken(customer_id)
     c.execute("UPDATE customers SET password=%s, authToken=%s WHERE customerId=%s;", (
@@ -65,7 +65,6 @@ def createCustomer():
 
     c.close()
 
-    print('created user!')
     return {
         'result': True,
         'authToken' : authToken,
