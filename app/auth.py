@@ -2,6 +2,7 @@ from app.flightBookerDB import db_interface
 from string import ascii_letters, digits
 from random import choice
 import hashlib
+import sys
 
 '''
 incomplete still... :(
@@ -17,7 +18,7 @@ def generateToken(customerId):
 
 # sha512: salt,customerId,password
 def hashPassword(customerId, password):
-    return hashlib.sha512(','.join([pw_salt, customerId, password])).hexdigest()
+    return hashlib.sha512(','.join([pw_salt, str(customerId), password]).encode('utf-8')).hexdigest()
 
 
 def checkUserCreds(email, password):

@@ -26,14 +26,14 @@ def login():
 def createCustomer():
     #try:
     data = request.json
+    print('data:', data)
     name = data['name']
     email = data['email']
     password = data['password']
 
     print('new user: ', name,',', email,',', password)
     def isValidEmail(email):
-        if len(email) > 7:
-            return re.match("^.+@([?)[a-zA-Z0-9-.]+.([a-zA-Z]{2,3}|[0-9]{1,3})(]?)$", email) != None
+        return re.match("[^@]+@[^@]+\.[^@]+", email) != None
     
     if not isValidEmail(email):
         print('invalid email...')
@@ -44,20 +44,23 @@ def createCustomer():
 
     c = db_interface.conn.cursor()
 
-    if db_interface.checkEmail(email):
+    if not db_interface.checkEmail(email):
         print('email in use')
         return {
             'result' : False,
             'message' : 'email already in use'
         }, 400
 
-    customer_id = c.execute("""
-        INSERT INTO customers
-        VALUES (?, ?, ?)
-        RETURNING customerId""", (name, email, password)).fetchone()
+    c.execute("""
+        INSERT INTO customers (name, email, password, authToken)
+        VALUES (%s, %s, %s, %s)
+        RETURNING customerId""", (name, email, password, generateToken(-1)))
+    customer_id = c.fetchone()
+    customer_id = customer_id[0]
+    print("customerId: ", customer_id)
 
     authToken = generateToken(customer_id)
-    c.execute("UPDATE customers SET password=?, authToken=? WHERE customerId=? RETURNING au;", (
+    c.execute("UPDATE customers SET password=%s, authToken=%s WHERE customerId=%s;", (
         hashPassword(customer_id, password), authToken, customer_id))
 
     c.close()

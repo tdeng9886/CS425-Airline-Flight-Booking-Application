@@ -11,7 +11,8 @@ def newConnection():
 
 def checkEmail(email):  # Returns True if email not in DB, False if it is.
     c = conn.cursor()
-    for row in c.execute("SELECT email FROM customer WHERE email LIKE ?", (email,)):
+    c.execute("SELECT email FROM customers WHERE email LIKE %s;", (email,))
+    if c.fetchone():
         c.close()
         return False
     c.close()
@@ -19,7 +20,7 @@ def checkEmail(email):  # Returns True if email not in DB, False if it is.
 
 def addCustomerAddress(customerId, line1, line2, postalCode, city, state, country):
     c = conn.cursor()
-    c.execute("INSERT INTO customers VALUES (?, ?, ?, ?, ?, ?, ?)", (
+    c.execute("INSERT INTO customers VALUES (%s, %s, %s, %s, %s, %s, %s)", (
         customerId,
         line1,
         line2,
@@ -34,7 +35,7 @@ def addCustomerAddress(customerId, line1, line2, postalCode, city, state, countr
 
 def getCustomerAddresses(customerId):
     c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM customerAddresses WHERE customerId = ?", customerId))
+    ret = list(c.execute("SELECT * FROM customerAddresses WHERE customerId = %s", customerId))
     c.close()
     return ret
 
@@ -42,14 +43,14 @@ def getCustomerAddresses(customerId):
 
 def deleteCustomerAddress(addressId, customerId):
     c = conn.cursor()
-    c.execute("DELETE FROM customerAddresses WHERE addressId = ? AND customerId = ?", (addressId, customerId))
+    c.execute("DELETE FROM customerAddresses WHERE addressId = %s AND customerId = %s", (addressId, customerId))
     rows_deleted = c.rowcount
     return bool(rows_deleted)
 
 
 def createBooking(flightId, customerId):
     c = con.cursor()
-    c.execute(" INSERT INTO bookings VALUE(?,?)", (
+    c.execute(" INSERT INTO bookings VALUE(%s,%s)", (
             customerId,
             flightId)
     )
@@ -59,13 +60,13 @@ def createBooking(flightId, customerId):
 
 def getBooking(customerId):
     c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM bookings WHERE customerId = ?", customerId))
+    ret = list(c.execute("SELECT * FROM bookings WHERE customerId = %s", customerId))
     c.close()
     return ret
 
 def deleteBooking(bookingId):
     c = conn.cursor()
-    c.execute("DELETE FROM bookings WHERE bookingId = ?", bookingId)
+    c.execute("DELETE FROM bookings WHERE bookingId = %s", bookingId)
     rows_deleted = c.rowcount
     c.close()
     return bool(rows_deleted)
@@ -85,8 +86,8 @@ def getFlights(departAirportId, departTime):
     ret = list(c.execute("""
         SELECT *
         FROM flights
-        WHERE departAirportId = ?
-        AND departTime > ?
+        WHERE departAirportId = %s
+        AND departTime > %s
         ORDER BY arriveTime ASC"""), (departAirportId, departTime))
     c.close()
 
@@ -94,20 +95,20 @@ def getFlights(departAirportId, departTime):
 
 def addAirport(airportId, name, country, state):
     c = conn.cursor()
-    c.execute("INSERT INTO airports VALUES (?, ?, ?, ?)", (airportId, name, country, state))
+    c.execute("INSERT INTO airports VALUES (%s, %s, %s, %s)", (airportId, name, country, state))
     c.close()
 
 def addAirline(airlineId, name, country):
     c = conn.cursor()
-    c.execute("INSERT INTO airlines VALUES (?, ?, ?)", (airlineId, name, country))
+    c.execute("INSERT INTO airlines VALUES (%s, %s, %s)", (airlineId, name, country))
     c.close()
 
 def addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats):
     c = conn.cursor()
-    c.execute("INSERT INTO flights VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats))
+    c.execute("INSERT INTO flights VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats))
     c.close()
 
 def addPrice(flightId, economyPrice, firstClassPrice, ts):
     c = conn.cursor()
-    c.execute("INSERT INTO flights VALUES (?, ?, ?, ?)", (flightId, economyPrice, firstClassPrice, ts))
+    c.execute("INSERT INTO flights VALUES (%s, %s, %s, %s)", (flightId, economyPrice, firstClassPrice, ts))
     c.close()
