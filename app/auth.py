@@ -23,9 +23,11 @@ def hashPassword(customerId, password):
 
 def checkUserCreds(email, password):
     c = db_interface.conn.cursor()
-    r = c.execute('SELECT customerId, password FROM customers WHERE email = ?', (email, )).fetchone()
+    c.execute('SELECT customerId, password FROM customers WHERE email = %s', (email, ))
+    r = c.fetchone()
+    print(r, flush=True)
     c.close()
-    return r['customerId'] if hashPassword(r['customerId'], password) == r['password'] else False
+    return r[0] if hashPassword(r[0], password) == r[1] else False
 
 def loginUser(email, password):
     customerId = checkUserCreds(email, password)
@@ -33,7 +35,7 @@ def loginUser(email, password):
         return False
     c = db_interface.conn.cursor()
     token = generateToken(customerId)
-    c.execute('UPDATE customers set authToken=? WHERE email=?;', (token, email ))
+    c.execute('UPDATE customers set authToken=%s WHERE email=%s;', (token, email ))
     c.close()
     return token
 
