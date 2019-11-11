@@ -104,9 +104,9 @@ def addAirline(airlineId, name, country):
     c.execute("INSERT INTO airlines VALUES (%s, %s, %s)", (airlineId, name, country))
     c.close()
 
-def addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats):
+def addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumber, departTime, arriveTime, economySeats, firstClassSeats):
     c = conn.cursor()
-    c.execute("INSERT INTO flights VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (flightId, airlineId, departAirportId, arriveAirportId, flightNumber, flightDate, departTime, arriveTime, economySeats, firstClassSeats))
+    c.execute("INSERT INTO flights VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (flightId, airlineId, departAirportId, arriveAirportId, flightNumber, departTime, arriveTime, economySeats, firstClassSeats))
     c.close()
 
 def addPrice(flightId, economyPrice, firstClassPrice, ts):

@@ -13,7 +13,7 @@ CREATE TABLE customerAddresses (
 	customerId BIGINT REFERENCES customers,
 	line1 VARCHAR(120) NOT NULL,
 	line2 VARCHAR(120) NOT NULL,
-	postalCode INT NOT NULL, 
+	postalCode INT NOT NULL,
 	city VARCHAR(85) NOT NULL,
 	state VARCHAR(40) NOT NULL,
 	country VARCHAR(45) NOT NULL
@@ -32,7 +32,7 @@ CREATE TABLE customerCreditCards (
 CREATE TABLE airports (
 	airportId CHAR(3) PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	country VARCHAR(35) NOT NULL, 
+	country VARCHAR(35) NOT NULL,
 	state VARCHAR(35)
 );
 
@@ -48,7 +48,6 @@ CREATE TABLE flights (
 	departAirportId CHAR(3) REFERENCES airports,
 	arriveAirportId CHAR(3) REFERENCES airports,
 	flightNumber INT NOT NULL,
-	flightDate DATE NOT NULL,
 	departTime TIMESTAMP NOT NULL,
 	arriveTime TIMESTAMP NOT NULL,
 	economySeats INT NOT NULL,
