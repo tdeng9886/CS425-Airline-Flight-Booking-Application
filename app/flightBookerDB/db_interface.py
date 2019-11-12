@@ -49,7 +49,7 @@ def deleteCustomerAddress(addressId, customerId):
 
 
 def createBooking(flightId, customerId):
-    c = con.cursor()
+    c = conn.cursor()
     c.execute(" INSERT INTO bookings VALUE(%s,%s)", (
             customerId,
             flightId)
@@ -83,13 +83,16 @@ def getAirports():
 
 # Get flights coming out of an airport:
 def getFlights(departAirportId, departTime):
-    c = conn.cursor()
-    ret = list(c.execute("""
+    c = conn.cursor()  # Not getting the date filtering right.
+    for row in c.execute("""
         SELECT *
         FROM flights
         WHERE departAirportId = %s
         AND departTime > %s
-        ORDER BY arriveTime ASC"""), (departAirportId, departTime))
+        ORDER BY arriveTime ASC""", (departAirportId, departTime)):
+        print(row)
+
+
     c.close()
 
 # Insert dummy data:

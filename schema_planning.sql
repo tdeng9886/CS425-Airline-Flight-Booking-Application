@@ -52,7 +52,7 @@ CREATE TABLE flights (
 	arriveTime TIMESTAMP NOT NULL,
 	economySeats INT NOT NULL,
 	firscClassSeats INT NOT NULL,
-	UNIQUE(flightDate, flightNumber)
+	-- UNIQUE(flightDate, flightNumber) | Need to replace this with something.
 );
 
 CREATE TABLE prices (
