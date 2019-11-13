@@ -59,8 +59,8 @@ def createBooking(flightId, customerId):
 
 
 def getBooking(customerId):
-    c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM bookings WHERE customerId = %s", customerId))
+    c = conn.cursor().execute("SELECT * FROM bookings WHERE customerId = %s", customerId)
+    ret = [x for x in c]
     c.close()
     return ret
 
@@ -76,24 +76,35 @@ def deleteBooking(bookingId):
 # Airports, Flights, Routing
 def getAirports():
     c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM airports"))
+    c.execute("SELECT * FROM airports")
+    ret = [x for x in c]
     c.close()
     return ret
 
+def getAirlines():
+    c = conn.cursor()
+    c.execute("SELECT * FROM airlines")
+    ret = [x for x in c]
+    c.close()
+    return ret
 
 # Get flights coming out of an airport:
-def getFlights(departAirportId, departTime):
+def getFlights(departAirportId, departTime, latestDepart):
+    print(departAirportId)
+    # Finding within 1 hour
     c = conn.cursor()  # Not getting the date filtering right.
-    for row in c.execute("""
+    c.execute("""
         SELECT *
         FROM flights
         WHERE departAirportId = %s
-        AND departTime > %s
-        ORDER BY arriveTime ASC""", (departAirportId, departTime)):
-        print(row)
+        AND departTime BETWEEN %s AND %s
+        ORDER BY arriveTime ASC""", (departAirportId, departTime, latestDepart))
 
-
+    ret = [x for x in c]
+    print("test")
+    print(ret)
     c.close()
+    return ret
 
 # Insert dummy data:
 

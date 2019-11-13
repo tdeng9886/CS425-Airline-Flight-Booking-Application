@@ -11,26 +11,28 @@ def gen_flight_timestamp():
     departTime = faker.date_time_between(start_date='now', end_date='+1y')
     endPoint = departTime + timedelta(days=1)
     arriveTime = faker.date_time_between(start_date=departTime, end_date=endPoint)
-
     return (departTime, arriveTime)
-flights_added = 0
-file = open("flights.csv")
-for line in file:
-    line = line.replace('"', '')
-    try:
-        row = line.split(",")
-        (departTime, arriveTime) = gen_flight_timestamp()
-        flightId = random.randint(111111111111, 999999999999)
-        airlineId = row[7]
-        departAirportId = row[10]
-        arriveAirportId = row[11]
-        flightNumber = random.randint(111, 999)
-        economySeats = random.choice([40, 80, 120, 240])
-        firstClassSeats = random.choice([5, 10, 15, 20])
 
-        db_interface.addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumber, departTime, arriveTime, economySeats, firstClassSeats)
-        flights_added += 1
-        if flights_added % 100 == 0:
-            print(flights_added)
-    except Exception as e:
-        print(e)
+airports = [x[0] for x in db_interface.getAirports()]
+airlines = [x[0] for x in db_interface.getAirlines()]
+routes = []
+# Route: (flightNumber, depart, arrive, economySeats, firstClassSeats)
+
+for i in range(1000):
+    flightNumber = i
+    airlineId = random.choice(airlines)
+    departAirportId = random.choice(airports)
+    arriveAirportId = random.choice(airports)
+    economySeats = random.choice([40, 80, 120, 240])
+    firstClassSeats = random.choice([5, 10, 15, 20])
+    routes.append((flightNumber, airlineId, departAirportId, arriveAirportId, flightNumber, economySeats, firstClassSeats))
+
+
+for i in range(1000000):
+    route = random.choice(routes)
+    flightNumber, airlineId, departAirportId, arriveAirportId, flightNumber, economySeats, firstClassSeats = route
+    (departTime, arriveTime) = gen_flight_timestamp()
+    flightId = i
+    db_interface.addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumber, departTime, arriveTime, economySeats, firstClassSeats)
+    if i % 1000 == 0:
+        print(i)

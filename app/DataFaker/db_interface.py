@@ -2,7 +2,6 @@ import psycopg2
 
 conn = psycopg2.connect(dbname='flights425', user='postgres', password='space')
 conn.autocommit = True
-# from app.auth import hashPassword
 
 # don't forget to conn.close() and cursor.close()
 def newConnection():
@@ -49,7 +48,7 @@ def deleteCustomerAddress(addressId, customerId):
 
 
 def createBooking(flightId, customerId):
-    c = con.cursor()
+    c = conn.cursor()
     c.execute(" INSERT INTO bookings VALUE(%s,%s)", (
             customerId,
             flightId)
@@ -59,8 +58,8 @@ def createBooking(flightId, customerId):
 
 
 def getBooking(customerId):
-    c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM bookings WHERE customerId = %s", customerId))
+    c = conn.cursor().execute("SELECT * FROM bookings WHERE customerId = %s", customerId)
+    ret = [x for x in c]
     c.close()
     return ret
 
@@ -76,21 +75,35 @@ def deleteBooking(bookingId):
 # Airports, Flights, Routing
 def getAirports():
     c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM airports"))
+    c.execute("SELECT * FROM airports")
+    ret = [x for x in c]
+    c.close()
+    return ret
+
+def getAirlines():
+    c = conn.cursor()
+    c.execute("SELECT * FROM airlines")
+    ret = [x for x in c]
     c.close()
     return ret
 
 
 # Get flights coming out of an airport:
-def getFlights(departAirportId, departTime):
-    c = conn.cursor()
-    ret = list(c.execute("""
+def getFlights(departAirportId, departTime, latestDepart):
+    print(departAirportId)
+    # Finding within 1 hour
+    c = conn.cursor()  # Not getting the date filtering right.
+    c.execute("""
         SELECT *
         FROM flights
         WHERE departAirportId = %s
-        AND departTime > %s
-        ORDER BY arriveTime ASC"""), (departAirportId, departTime))
+        AND departTime BETWEEN %s AND %s
+        ORDER BY arriveTime ASC""", (departAirportId, departTime, latestDepart))
+
+    ret = [x for x in c]
+    print(ret)
     c.close()
+    return ret
 
 # Insert dummy data:
 
