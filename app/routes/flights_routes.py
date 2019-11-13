@@ -11,33 +11,30 @@ def getAirports():
 # Taking two airportIds:
 @app.route('/flights/search', methods=['GET', 'POST'])
 def routeFlight():
-    def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=3):
+    def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2):
         if tokens == 0:
-            return False
-        routes = []
-        latestDepart = arriveTime + timedelta(days=10)
-        subpaths = db_interface.getFlights(cur_airport, arriveTime, latestDepart)
-        if subpaths:
-            for row in subpaths:
-                routes.append([row])
-
+            return []
+        latestDepart = arriveTime + timedelta(days=1)
+        subpaths = [[x] for x in db_interface.getFlights(cur_airport, arriveTime, latestDepart)]
+        # print(subpaths)
+        # For each possible flight that could be taken first:
         completed_routes = []
-        subroutes = {}
-        for route in routes:  # If the end point is where we want to go:
-            # print(route, "route line 26")
-            if route[-1][3] == arriveAirportId:  # If this route ends at the correct place:
-                completed_routes.append(route)
-            else:  # Otherwise, find it
-                print("route", route)
-                print("Subrouting: ", route[-1][3], route[-1][7], arriveAirportId, tokens-1)
-                subroute = routeFlight_rec(route[-1][3], route[-1][7], arriveAirportId, tokens-1)
-                if subroute:
-                    subroutes[route] = subroute
-        for key in subroutes.keys():
-            for subroute in subroutes[key]:
-                completed_routes.append(key.extend(subroute))
-        return completed_routes
+        # List of lists (routes)
+        for subpath in subpaths:
+            if subpath[0][3] == arriveAirportId:
+                completed_routes.append(subpath)
+            else:
+                subsubpaths = routeFlight_rec(subpath[0][3], subpath[0][6], arriveAirportId, tokens-1)
+                # Subsubpaths is a list of routes, each leading to the destination.
+                for subsubpath in subsubpaths:
+                    try:
+                        # print(subpath.copy() + subsubpath)
+                        if subsubpath != None: # If the last entry in the subsubpath isn't an empty route:
+                            completed_routes.append(subpath.copy() + subsubpath) # Then it must lead there
+                    except TypeError as E:
+                        pass # It's a none value.
 
+        return completed_routes
 
     data = request.json
     departAirportId = data['departAirportId']

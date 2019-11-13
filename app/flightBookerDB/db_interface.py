@@ -90,7 +90,6 @@ def getAirlines():
 
 # Get flights coming out of an airport:
 def getFlights(departAirportId, departTime, latestDepart):
-    print(departAirportId)
     # Finding within 1 hour
     c = conn.cursor()  # Not getting the date filtering right.
     c.execute("""
@@ -101,8 +100,6 @@ def getFlights(departAirportId, departTime, latestDepart):
         ORDER BY arriveTime ASC""", (departAirportId, departTime, latestDepart))
 
     ret = [x for x in c]
-    print("test")
-    print(ret)
     c.close()
     return ret
 
