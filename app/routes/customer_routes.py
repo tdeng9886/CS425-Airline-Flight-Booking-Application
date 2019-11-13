@@ -117,3 +117,32 @@ def deleteCustomerAddress():
     return {
         'result': False
     }
+
+@app.route('/customer/CreditCard/add', methods=['POST'])
+def addCreditCard():
+    customerId = request.headers.get('customerId')
+    data = request.json
+    addressId = data['addressId']
+    cardNumber = data['cardNumber']
+    expiration = data['expiration']
+    nameOnCard = data['nameOnCard']
+    cvcCode = data['cvcCode']
+
+    db_interface.addCreditCard(customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode)
+
+    return {
+        'result': True,
+        'message': 'Successfully added a new credit card.'
+    }
+@app.route('/customer/CreditCard/delete', methods=['POST'])
+def deleteCreditCard():
+    customerId = request.header.get('customerId')
+    data = request.json
+    cardId = data ['cardId']
+    if deleteCreditCard(cardId, customerId):
+        return{
+        'result':True
+        }
+    return{
+        'result':False
+    }
