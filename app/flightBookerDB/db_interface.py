@@ -124,3 +124,24 @@ def addPrice(flightId, economyPrice, firstClassPrice, ts):
     c = conn.cursor()
     c.execute("INSERT INTO flights VALUES (%s, %s, %s, %s)", (flightId, economyPrice, firstClassPrice, ts))
     c.close()
+
+ # Add a new credit card
+def addCreditCard(customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode):
+    c = conn.cursor()
+    c.execute ("INSERT INTO customers VALUES (%s, %s, %s, %s, %s, %s)",(
+        customerId,
+        addressId,
+        cardNumber,
+        expiration,
+        nameOnCard,
+        cvcCode)
+    )
+    c.close()
+    return True
+
+# Delete credit card
+def deleteCreditCard (cardId, customerId):
+    c = conn.cursor()
+    c.execute("DELETE FROM creditCard WHERE cardId = %s AND customerId = %s", (cardId, customerId))
+    ros_deleted = c.rowcount
+    return bool(rows_deleted)
