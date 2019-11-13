@@ -118,7 +118,7 @@ def deleteCustomerAddress():
         'result': False
     }
 
-@app.route('/customer/CreditCard/add', methods=['POST'])
+@app.route('/customer/creditCard/add', methods=['POST'])
 def addCreditCard():
     customerId = request.headers.get('customerId')
     data = request.json
@@ -134,7 +134,21 @@ def addCreditCard():
         'result': True,
         'message': 'Successfully added a new credit card.'
     }
-@app.route('/customer/CreditCard/delete', methods=['POST'])
+@app.route('/customer/creditCard/get', methods = ['POST'])
+def getCreditCard():
+    customerId = request.headers.get(customerId)
+    creditCard = db_interface.getCreditCard(customerId)
+    if creditCard:
+        return {
+            'result': True,
+            'creditCard': creditCard
+        }
+    return {
+        'result': False
+    }
+
+
+@app.route('/customer/creditCard/delete', methods=['POST'])
 def deleteCreditCard():
     customerId = request.header.get('customerId')
     data = request.json
