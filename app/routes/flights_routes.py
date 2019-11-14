@@ -11,7 +11,7 @@ def getAirports():
 # Taking two airportIds:
 @app.route('/flights/search', methods=['GET', 'POST'])
 def routeFlight():
-    def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2):
+    def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=4):
         if tokens == 0:
             return []
         latestDepart = arriveTime + timedelta(days=1)
