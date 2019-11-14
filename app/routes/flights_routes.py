@@ -21,8 +21,8 @@ def scoreFlight(route=None, departTime=None):
     # Cost of flight
     ePrice, fPrice = 0, 0
     for flight in route:
-        ep, fp = db_interface.getFlightPrice(flight[0])
-        ePrice, fPrice = ePrice + ep, fPrice + fp
+        ep, fp = db_interface.getFlightPrice(flight[0])[0]
+        ePrice, fPrice = ePrice + float(ep), fPrice + float(fp)
     return (flightTime, ePrice, fPrice)
 
 
@@ -97,7 +97,7 @@ def routeFlight():
     for route in routes:
         routeDataTuple = scoreFlight(route, departTime)
         routeData = {
-            'routeTime': routeDataTuple[0],
+            'routeTime': routeDataTuple[0].total_seconds(),
             'routeEcoCost': routeDataTuple[1],
             'routeFirstCost': routeDataTuple[2]
         }

@@ -108,9 +108,9 @@ def getFlightPrice(flightId):
     c.execute("""
         SELECT economyPrice, firstClassPrice
         FROM prices
-        WHERE flightId = %sc
+        WHERE flightId = %s
         ORDER BY ts DESC
-        """)
+        """, (flightId,))
     ret = [x for x in c]
     c.close()
     return ret
@@ -134,7 +134,7 @@ def addFlight(flightId, airlineId, departAirportId, arriveAirportId, flightNumbe
 
 def addPrice(flightId, economyPrice, firstClassPrice, ts):
     c = conn.cursor()
-    c.execute("INSERT INTO flights VALUES (%s, %s, %s, %s)", (flightId, economyPrice, firstClassPrice, ts))
+    c.execute("INSERT INTO prices VALUES (%s, %s, %s, %s)", (flightId, economyPrice, firstClassPrice, ts))
     c.close()
 
  # Add a new credit card
