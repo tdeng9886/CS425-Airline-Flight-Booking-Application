@@ -11,10 +11,10 @@ def getAirports():
 # Taking two airportIds:
 @app.route('/flights/search', methods=['GET', 'POST'])
 def routeFlight():
-    def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2):
+    def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2, waitTime=1):
         if tokens == 0:
             return []
-        latestDepart = arriveTime + timedelta(days=1)
+        latestDepart = arriveTime + timedelta(days=waitTime)
         subpaths = [[x] for x in db_interface.getFlights(cur_airport, arriveTime, latestDepart)]
         # print(subpaths)
         # For each possible flight that could be taken first:
@@ -24,7 +24,7 @@ def routeFlight():
             if subpath[0][3] == arriveAirportId:
                 completed_routes.append(subpath)
             else:
-                subsubpaths = routeFlight_rec(subpath[0][3], subpath[0][6], arriveAirportId, tokens-1)
+                subsubpaths = routeFlight_rec(subpath[0][3], subpath[0][6], arriveAirportId, tokens-1, waitTime)
                 # Subsubpaths is a list of routes, each leading to the destination.
                 for subsubpath in subsubpaths:
                     try:
@@ -36,11 +36,53 @@ def routeFlight():
 
         return completed_routes
 
+    def scoreFlight(route, departTime):
+        # Time of Flight
+        flightTime = route[-1][6] - departTime
+        # Cost of flight
+        ePrice, fPrice = 0, 0
+        for flight in route:
+            ep, fp = db_interface.getFlightPrice(flight[0])
+            ePrice, fPrice = ePrice + ep, fPrice + fp
+
+        return (flightTime, ePrice, fPrice)
+
     data = request.json
-    departAirportId = data['departAirportId']
-    arriveAirportId = data['arriveAirportId']
+    departAirportId = data['departAirportId']  # Departing airport
+    arriveAirportId = data['arriveAirportId']  # Target airport
+    tokens = data['tokens']  # Maximum number of transfers
+    waitTime = data['waitTime']  # Maximum number of days between flights
+
     departTime = datetime.strptime(data['departTime'], "%Y-%m-%d %H:%M:%S")
-    routes = routeFlight_rec(departAirportId, departTime, arriveAirportId)
+
+    routes = routeFlight_rec(
+        departAirportId, departTime, arriveAirportId, tokens, waitTime
+    )
+
+    routeSpeed = {}
+    routeEcoPrice = {}
+    routeFirstPrice = {}
+
+    for route in routes:
+        scores = scoreFlight(route, departTime)
+        routeSpeed[scores[0]] = route
+        routeEcoPrice[scores[1]] = route
+        routeFirstPrice[scores[2]] = route
+
+    speedSortedFlights = []
+    for routeTime in sorted(routeSpeed.keys()):
+        speedSortedFlights.append(routeSpeed[routeTime])
+
+    ecoSortedFlights = []
+    for price in sorted(routeEcoPrice.keys()):
+        ecoSortedFlights.append(routeEcoPrice[price])
+
+    firstSortedFlights = []
+    for price in sorted(routeFirstPrice.keys()):
+        firstSortedFlights.append(routeFirstPrice[price])
+
     return {
-        "result": routes
+        "speedSortedFlights": speedSortedFlights,
+        "ecoSortedFlights": ecoSortedFlights,
+        "firstSortedFlights": firstSortedFlights
     }
