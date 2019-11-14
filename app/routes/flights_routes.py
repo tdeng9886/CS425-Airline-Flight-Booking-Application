@@ -9,6 +9,23 @@ def getAirports():
     return db_interface.getAirports()
 
 # Taking two airportIds:
+@app.route('/flights/score', methods=['POST'])
+def scoreFlight(route=None, departTime=None):
+    # Time of Flight
+    if not route:
+        data = request.json
+        route = data['route']
+        departTime = datetime.strptime(data['departTime'], "%Y-%m-%d %H:%M:%S")
+
+    flightTime = route[-1][6] - departTime
+    # Cost of flight
+    ePrice, fPrice = 0, 0
+    for flight in route:
+        ep, fp = db_interface.getFlightPrice(flight[0])
+        ePrice, fPrice = ePrice + ep, fPrice + fp
+    return (flightTime, ePrice, fPrice)
+
+
 @app.route('/flights/search', methods=['GET', 'POST'])
 def routeFlight():
     def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2, waitTime=1):
@@ -16,7 +33,6 @@ def routeFlight():
             return []
         latestDepart = arriveTime + timedelta(days=waitTime)
         subpaths = [[x] for x in db_interface.getFlights(cur_airport, arriveTime, latestDepart)]
-        # print(subpaths)
         # For each possible flight that could be taken first:
         completed_routes = []
         # List of lists (routes)
@@ -28,24 +44,13 @@ def routeFlight():
                 # Subsubpaths is a list of routes, each leading to the destination.
                 for subsubpath in subsubpaths:
                     try:
-                        # print(subpath.copy() + subsubpath)
-                        if subsubpath != None: # If the last entry in the subsubpath isn't an empty route:
+                        if subsubpath is not None:  # If the last entry in the subsubpath isn't an empty route:
                             completed_routes.append(subpath.copy() + subsubpath) # Then it must lead there
                     except TypeError as E:
-                        pass # It's a none value.
+                        print(E)
+                        pass  # I don't think we should ever hit this.
 
         return completed_routes
-
-    def scoreFlight(route, departTime):
-        # Time of Flight
-        flightTime = route[-1][6] - departTime
-        # Cost of flight
-        ePrice, fPrice = 0, 0
-        for flight in route:
-            ep, fp = db_interface.getFlightPrice(flight[0])
-            ePrice, fPrice = ePrice + ep, fPrice + fp
-
-        return (flightTime, ePrice, fPrice)
 
     data = request.json
     departAirportId = data['departAirportId']  # Departing airport
