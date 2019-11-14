@@ -63,16 +63,58 @@ def routeFlight():
     routes = routeFlight_rec(
         departAirportId, departTime, arriveAirportId, tokens, waitTime
     )
+    '''
+    {
+        'unsortedRoutes':
+            [
+                {
+                    routeData: {
+                        routeTime: timedelta,
+                        routeEcoCost: float,
+                        routeFirstCost: float
+                    },
+                    route: [
+                        (flight1),
+                        (flight2),
+                        (...),
+                        (flightn)
+                    ]
+                }
+            ],
+        'speedSortedRoutes': [
+            ...
+        ],
+        'ecoSortedRoutes': [
+            ...
+        ],
+        'firstSortedRoutes': [
+            ...
+        ]
+    }
+    '''
+
+    outputRoutes = {'unsortedRoutes': []}
+    for route in routes:
+        routeDataTuple = scoreFlight(route, departTime)
+        routeData = {
+            'routeTime': routeDataTuple[0],
+            'routeEcoCost': routeDataTuple[1],
+            'routeFirstCost': routeDataTuple[2]
+        }
+        completeRoute = {
+            'routeData': routeData,
+            'route': route
+        }
+        outputRoutes['unsortedRoutes'].append(completeRoute)
 
     routeSpeed = {}
     routeEcoPrice = {}
     routeFirstPrice = {}
 
-    for route in routes:
-        scores = scoreFlight(route, departTime)
-        routeSpeed[scores[0]] = route
-        routeEcoPrice[scores[1]] = route
-        routeFirstPrice[scores[2]] = route
+    for route in outputRoutes['unsortedRoutes']:
+        routeSpeed[route['routeData']['routeTime']] = route
+        routeEcoPrice[route['routeData']['routeEcoCost']] = route
+        routeFirstPrice[route['routeData']['routeFirstCost']] = route
 
     speedSortedFlights = []
     for routeTime in sorted(routeSpeed.keys()):
@@ -86,8 +128,8 @@ def routeFlight():
     for price in sorted(routeFirstPrice.keys()):
         firstSortedFlights.append(routeFirstPrice[price])
 
-    return {
-        "speedSortedFlights": speedSortedFlights,
-        "ecoSortedFlights": ecoSortedFlights,
-        "firstSortedFlights": firstSortedFlights
-    }
+    outputRoutes["speedSortedFlights"] = speedSortedFlights
+    outputRoutes["ecoSortedFlights"] = ecoSortedFlights
+    outputRoutes["firstSortedFlights"] = firstSortedFlights
+
+    return outputRoutes
