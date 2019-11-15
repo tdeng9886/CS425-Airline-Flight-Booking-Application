@@ -28,6 +28,7 @@ def scoreFlight(route=None, departTime=None):
 
 @app.route('/flights/search', methods=['GET', 'POST'])
 def routeFlight():
+    @functools.lru_cache(maxsize=512, typed=False)
     def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2, waitTime=1):
         if tokens == 0:
             return []
