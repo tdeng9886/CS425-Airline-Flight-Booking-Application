@@ -28,8 +28,8 @@ const cs425 = {
                     mode: 'cors',
                     headers: {
                       'Accept': 'application/json',
-                      'Content-Type': 'application/json'
-                      'Authentication': `Bearer ${cs425.getCookie('authToken')}`,
+                      'Content-Type': 'application/json',
+                      'Authentication': `Bearer ${ cs425.getCookie( 'authToken' ) }`,
                     },
                     body: JSON.stringify(body)
                 });
@@ -47,7 +47,7 @@ const cs425 = {
                     mode: 'cors',
                     headers: {
                       'Accept': 'application/json',
-                      'Content-Type': 'application/json'
+                      'Content-Type': 'application/json',
                       'Authentication': `Bearer ${cs425.getCookie('authToken')}`,
                     },
                 });

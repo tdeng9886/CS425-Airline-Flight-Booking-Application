@@ -15,8 +15,13 @@ def describeCustomer():
     c.execute("SELECT * FROM customers WHERE customerId=%s;", (customerId, ))
     cus = c.fetchone()
     c.close()
+    
+    #print(cus, flush=True)
 
-    return cus
+    return {
+        'email' : cus[1],
+        'name' : cus[2],
+    }
 
 @app.route('/customer/login', methods=['POST'])
 def login():

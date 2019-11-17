@@ -46,7 +46,8 @@ def authUser(headers):
         c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken, ))
         id = c.fetchone()
         c.close()
-        id = id['customerId']
+        id = id[0]
         return id
-    except:
+    except Exception as e:
+        print(e, flush=True)
         return False
