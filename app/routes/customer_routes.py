@@ -1,9 +1,22 @@
 from app import app
-from app.auth import hashPassword, generateToken, loginUser
+from app.auth import hashPassword, generateToken, loginUser, authUser
 from app.flightBookerDB import db_interface
 from flask import request
 import re
 
+
+@app.route('/customer', methods=['GET'])
+def describeCustomer():
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
+    c = db_interface.conn.cursor()
+    c.execute("SELECT * FROM customers WHERE customerId=%s;", (customerId, ))
+    cus = c.fetchone()
+    c.close()
+
+    return cus
 
 @app.route('/customer/login', methods=['POST'])
 def login():
@@ -34,7 +47,7 @@ def createCustomer():
     print('new user: ', name,',', email,',', password)
     def isValidEmail(email):
         return re.match("[^@]+@[^@]+\.[^@]+", email) != None
-    
+
     if not isValidEmail(email):
         print('invalid email...', flush=True)
         return {

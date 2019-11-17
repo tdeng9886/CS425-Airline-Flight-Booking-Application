@@ -8,7 +8,7 @@ import sys
 incomplete still... :(
 '''
 
-
+# do not change this!
 pw_salt = "Zm1ha3NsZW5kZmlsIGFlZ2Z1YWhrdXMgZm5qa3NkbmtqdmMgYW5zY3Nham5kY2FucyBkc2puY3NhamRrbmZqbjRxZm52cjM5NA=="
 
 # authtoken == 64 random letters/numbers
@@ -39,7 +39,14 @@ def loginUser(email, password):
     c.close()
     return token
 
-
-def authUser():
-    c = db_interface.conn.cursor()
-    token = c.execute('SELECT authToken FROM customers')
+def authUser(headers):
+    try:
+        authToken = headers.get('Authentication').split(' ')[1]
+        c = db_interface.conn.cursor()
+        c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken, ))
+        id = c.fetchone()
+        c.close()
+        id = id['customerId']
+        return id
+    except:
+        return False
