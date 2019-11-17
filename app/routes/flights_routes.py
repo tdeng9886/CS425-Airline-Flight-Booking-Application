@@ -25,10 +25,19 @@ def scoreFlight(route=None, departTime=None):
         ePrice, fPrice = ePrice + float(ep), fPrice + float(fp)
     return (flightTime, ePrice, fPrice)
 
+"""
+Inputs:
+{
+	"departAirportId": "07A",
+	"arriveAirportId": "1N7",
+	"departTime": "2019-12-29 18:16:52", # Pass as string in this form.
+	"tokens": 2, # Suggested value.
+	"waitTime": 0.07 # Maximum time beteeen flights, in days.
+}
 
+Outputs: """
 @app.route('/flights/search', methods=['GET', 'POST'])
 def routeFlight():
-    @functools.lru_cache(maxsize=512, typed=False)
     def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2, waitTime=1):
         if tokens == 0:
             return []
