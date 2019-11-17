@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html>
 	<!-- this page will likely be embedded somewhere else -->
 	<head>
@@ -11,7 +11,6 @@
 	<body>
 		<div class="page-slice">
 			<h2>Unauthenticated<small>Sign in or Sign up to Book Your Flights</small></h2>
-
 			<form>
 				<fieldset>
 					<legend>Sign In</legend>
@@ -19,12 +18,12 @@
 						<label for="email">Email</label>
 						<input type="email" id="email-input" />
 					</div>
-					<div class="row"> 
+					<div class="row">
 						<label for="password">Password</label>
 						<input type="password" id="password-input" />
 					</div>
 					<button type="button" onclick="sendCreds()" >Sign In</button>
-					
+
 				</fieldset>
 				<br/>
 				<hr/>
@@ -46,11 +45,10 @@
 
 				</fieldset>
 			</form>
-
-
+			
 		</div>
 		<script>
-		
+
 
 			// hash password to prevent someone from reading user's plaintext password over internet
 			// it's hashed again on backend too :)
@@ -66,13 +64,13 @@
 
 			function storeToken(token) {
 				(function setCookie(cname, cvalue, exdays) {
-					var d = new Date();
+					const d = new Date();
 					d.setTime(d.getTime() + (exdays*24*60*60*1000));
-					var expires = "expires=" + d.toUTCString();
-					document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-				})("authToken", token, 1/12);
+					const expires = "expires=" + d.toUTCString();
+					document.cookie = `${cname}=${cvalue};${expires};path=/`;
+				})("authToken", token, 1 / 12);
 			}
-			// 
+			//
 			async function logUserIn(email, password) {
 				const resp = await fetch("http://dvtate.com:4250/customer/login", {
 					method: 'POST',
@@ -90,7 +88,7 @@
 				return token;
 			}
 
-			// 
+			//
 			async function sendCreds() {
 				const email = document.getElementById("email-input").value;
 				const password = document.getElementById("password-input").value;
@@ -101,7 +99,7 @@
 				}
 			}
 
-			// 
+			//
 			async function signUp() {
 				console.log('ff');
 				const emailBox = document.getElementById("email-input-su");
@@ -114,7 +112,7 @@
 					if (df.n) nameBox.value = '';
 				}
 				const email = emailBox.value, password = passwordBox.value, name = nameBox.value;
-					
+
 				console.log({ email, password: hashPassword(email, password), name });
 				const resp = await fetch("http://dvtate.com:4250/customer/create", {
 					method: 'POST',

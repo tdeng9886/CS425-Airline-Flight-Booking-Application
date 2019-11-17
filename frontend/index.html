@@ -4,44 +4,118 @@
         <title>FlightBook</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
 		<link rel="stylesheet" href="main.css" />
+        <link rel="stylesheet" href="fa/css/all.min.css" />
         <script src="main.js"> </script>
 
         <style>
                 div {
-                    border: 1px solid red;
+                    /*border: 1px solid red;*/
                 }
                 div#topbar  {
                     min-height: 50px;
                 }
                 div#flight-search {
-                    min-height: 100px;
+                    background-image: url("https://images6.alphacoders.com/304/304834.jpg");
+                    background-size: fill;
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-attachment: fixed;
+                    min-height: 250px;
                 }
+
+                div#flight-search div {
+                    padding: 40px;
+                }
+
+                div#flight-search div div {
+                    border-radius: 4px;
+                    border: 1px solid grey;
+                    background-color: #fff;
+                }
+
                 #flight-date {
                     padding: 25px;
                 }
+
+                #manage-info {
+                    min-height: 200px;
+                }
+                .row {
+                    width: 100%;
+                }
+
+
+                #logout-area {
+                    text-align: right;
+                }
+
         </style>
-    </head><body>
+        <script>
+            // log them out of app
+            function logout() {
+                (function clearCookie(name, domain, path){
+                    domain = domain || document.domain;
+                    path = path || "/";
+                    document.cookie = name + "=; expires=" + +new Date + "; domain=" + domain + "; path=" + path;
+                })("authToken");
+            }
+
+
+            async function onload() {
+                let customer;
+                try {
+                    customer = await cs425.api.get('/customer');
+                } catch(e) {
+                    console.error(e);
+                    logout();
+                }
+                document.getElementById('bind-customer-name').innerHTML = customer.name;
+            }
+        </script>
+    </head><body onload="onload()">
+        <!-- nav bar -->
         <div class="row" id='topbar'>
-            hello
+            <div class="col-sm-6">
+
+            </div>
+            <div class="col-sm-6" id="logout-area">
+                Hello<span id="bind-customer-name"> there!</span>
+                <button onclick="logout()">
+                    Logout
+                </button>
+            </div>
         </div>
         <div class="row" id='flight-search'>
-            <div class="row">
-                <div class="col-sm-6">
-                    <h2>Depart</h2>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div>
+                <center>
+                    <h1>Depart <i class="fas fa-plane-departure"></i></h1>
                     <input type="text" placeholder="Airport" id="from-airport" />
-
-                </div>
-                <div class="col-sm-6">
-                    <h2>Arrive</h2>
-                    <input type="text" placeholder="Airport" id="from-airport" />
-
-                </div>
+                </center></div>
             </div>
-            <center>
-                <input type="date" placeholder="When" id="flight-date" />
-            </center>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div>
+                <center>
+                    <h1>Date <i class="fas fa-plane"></i></h1>
+                    <input type="date" id="flight-date" />
+                </center></div>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div>
+                <center>
+                    <h1>Arrive <i class="fas fa-plane-arrival"></i></h1>
+                    <input type="text" placeholder="Airport" id="from-airport" />
+                </center></div>
+            </div>
         </div>
-        <div class="row" id=''>
+        <div class="row" id='manage-info'>
+            <div class="col-sm-12 col-md-6 col-lg-6" onclick="alert('redirect to manage CCs')">
+                <center><h1>Manage Credit Cards<h1></center>
+            </div>
+
+            <div class="col-sm-12 col-md-6 col-lg-6" onclick="alert('redirect to manage Addresses')">
+                <center><h1>Manage Addresses<h1></center>
+            </div>
 
         </div>
 
