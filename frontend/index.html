@@ -7,31 +7,43 @@
         <script src="main.js"> </script>
 
         <style>
-            
-        
+                div {
+                    border: 1px solid red;
+                }
+                div#topbar  {
+                    min-height: 50px;
+                }
+                div#flight-search {
+                    min-height: 100px;
+                }
+                #flight-date {
+                    padding: 25px;
+                }
         </style>
     </head><body>
         <div class="row" id='topbar'>
-
+            hello
         </div>
         <div class="row" id='flight-search'>
             <div class="row">
                 <div class="col-sm-6">
                     <h2>Depart</h2>
                     <input type="text" placeholder="Airport" id="from-airport" />
-                    
+
                 </div>
                 <div class="col-sm-6">
                     <h2>Arrive</h2>
                     <input type="text" placeholder="Airport" id="from-airport" />
-                    
+
                 </div>
             </div>
-            <input type="date" placeholder="When" id="flight-date" />
+            <center>
+                <input type="date" placeholder="When" id="flight-date" />
+            </center>
         </div>
         <div class="row" id=''>
 
         </div>
-        
+
     </body>
 </html>
