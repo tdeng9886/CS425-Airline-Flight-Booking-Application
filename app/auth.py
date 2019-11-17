@@ -4,9 +4,6 @@ from random import choice
 import hashlib
 import sys
 
-'''
-incomplete still... :(
-'''
 
 # do not change this!
 pw_salt = "Zm1ha3NsZW5kZmlsIGFlZ2Z1YWhrdXMgZm5qa3NkbmtqdmMgYW5zY3Nham5kY2FucyBkc2puY3NhamRrbmZqbjRxZm52cjM5NA=="

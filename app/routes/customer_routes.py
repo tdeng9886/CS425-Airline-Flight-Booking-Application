@@ -15,7 +15,7 @@ def describeCustomer():
     c.execute("SELECT * FROM customers WHERE customerId=%s;", (customerId, ))
     cus = c.fetchone()
     c.close()
-    
+
     #print(cus, flush=True)
 
     return {
@@ -44,7 +44,7 @@ def login():
 def createCustomer():
     #try:
     data = request.json
-    print('data:', data, flush=True)
+    # print('data:', data, flush=True)
     name = data['name']
     email = data['email']
     password = data['password']
@@ -92,8 +92,11 @@ def createCustomer():
 
 @app.route('/customer/address/add', methods=['POST'])
 def addCustomerAddress():
-    # Getting customer ID from header
-    customerId = request.headers.get('customerId')
+
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
     # Extracting rest of form data
     data = request.json
     line1 = data['line1']
@@ -112,7 +115,10 @@ def addCustomerAddress():
 
 @app.route('/customer/address/get', methods=['POST'])
 def getCustomerAddress():
-    customerId = request.headers.get('customerId')
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
     customerAddresses = db_interface.getCustomerAddresses(customerId)
     if customerAddresses:
         return {
@@ -125,7 +131,11 @@ def getCustomerAddress():
 
 @app.route('/customer/address/delete', methods=['POST'])
 def deleteCustomerAddress():
-    customerId = request.headers.get('customerId')
+
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
     data = request.json
     addressId = data['addressId']
     if deleteCustomerAddress(addressId, customerId):
@@ -138,7 +148,10 @@ def deleteCustomerAddress():
 
 @app.route('/customer/creditCard/add', methods=['POST'])
 def addCreditCard():
-    customerId = request.headers.get('customerId')
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
     data = request.json
     addressId = data['addressId']
     cardNumber = data['cardNumber']
@@ -154,7 +167,9 @@ def addCreditCard():
     }
 @app.route('/customer/creditCard/get', methods = ['POST'])
 def getCreditCard():
-    customerId = request.headers.get(customerId)
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
     creditCard = db_interface.getCreditCard(customerId)
     if creditCard:
         return {
@@ -168,7 +183,10 @@ def getCreditCard():
 
 @app.route('/customer/creditCard/delete', methods=['POST'])
 def deleteCreditCard():
-    customerId = request.header.get('customerId')
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
     data = request.json
     cardId = data ['cardId']
     if deleteCreditCard(cardId, customerId):

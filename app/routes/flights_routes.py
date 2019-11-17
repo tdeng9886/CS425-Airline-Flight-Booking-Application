@@ -2,7 +2,9 @@ from app import app
 from app.flightBookerDB import db_interface
 from flask import request
 from datetime import datetime, timedelta
+from app.auth import authUser
 
+# we could require authentication for these... but that jsut makes debugging harder
 
 @app.route('/flights/airports', methods=['POST'])
 def getAirports():
