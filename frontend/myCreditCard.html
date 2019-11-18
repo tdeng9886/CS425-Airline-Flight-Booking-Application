@@ -6,6 +6,11 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
 		<link rel="stylesheet" href="main.css" />
 		<script src="sha.js"> </script>
+		<style>
+				#addCreditCard {
+                    text-align: right;
+                }
+		</style>
 
 	</head>
 	<body>
@@ -15,18 +20,18 @@
 			<form>
 				<fieldset>
 					<div class="row" id='manage-info'>
-            			<div class="col-sm-12 col-md-4 col-lg-4">
-                			<h1><center><button type="button" onclick="window.location.href ='index.html';">Home</button><h1></center>
-            			</div>
+            					<div class="col-sm-12 col-md-4 col-lg-4">
+                					<h1><button type="button" onclick="window.location.href ='index.html';">Home</button><h1>
+            					</div>
 
-           	 			<div class="col-sm-12 col-md-4 col-lg-4" onclick="alert('redirect to manage Addresses')">
-                			<center><h1>User Name<h1></center>
-            			</div>
-            			<div class="col-sm-12 col-md-4 col-lg-4">
-                			<center><h1><button type="button" onclick="alert('Jump to AddCreditCard Page')">Add Credit Card</button><h1></center>
-            			</div>
+           	 				<div class="col-sm-12 col-md-4 col-lg-4" onclick="alert('redirect to manage Addresses')">
+                					<center><h1>User Name<h1></center>
+            					</div>
+            					<div class="col-sm-12 col-md-4 col-lg-4" id="addCreditCard">
+                					<h1><button type="button" onclick="window.location.href ='addNewCard.html';">Add Credit Card</button><h1>
+            					</div>
 
-        			</div>
+        				</div>
 					
 					<div class = "row">
 						<table style="width:100%">
