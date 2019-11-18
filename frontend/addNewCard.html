@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+	<!-- this page will likely be embedded somewhere else -->
+	<head>
+		<title>Credit Card</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+		<link rel="stylesheet" href="main.css" />
+		<script src="sha.js"> </script>
+
+	</head>
+
+	<!--input type name matches schema planning names-->
+
+	<body>
+		<div class = "creditCard">
+			<h2>Add New Credit Cards
+			</h2>
+			<form>
+				<fieldset>
+					<legend>Add New Card</legend>
+					<div class="row">
+						<label for="cardNumber">Card Number</label>
+						<input type="cardId" name="cardNumber-input-su"/>
+					</div>
+					<div class="row">
+						<label for="expiration">Expriation Date</label>
+						<input type="expiration" name="expiration-input-su"/>
+					</div>
+					<div class="row">
+						<label for="nameOnCard">Card Name</label>
+						<input type="nameOnCard" name="nameOnCard-input-su"/>
+					</div>
+					<div class="row">
+						<label for="cvcCode">cvc Code</label>
+						<input type="cvcCode" name="cvcCode-input-su"/>
+					</div>
+					<div class="row" id='manage-info'>
+			            <div class="row">
+			                <button type="button" onclick="save()">Save</button>
+			            </div>
+
+		            	<div class="crow">
+			                <button type="button" onclick="window.location.href ='myCreditCard.html';">Back</button>
+			            </div>
+
+		        	</div>
+						
+					
+
+					 
+
+				</fieldset>
+			</form>
+	</body>
