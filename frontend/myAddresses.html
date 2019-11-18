@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+	<!-- this page will likely be embedded somewhere else -->
+	<head>
+		<title>Credit Card</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+		<link rel="stylesheet" href="main.css" />
+		<script src="sha.js"> </script>
+
+	</head>
+	<body>
+		<div class = "creditCard">
+			<h2>Manage Addresses
+			</h2>
+			<form>
+				<fieldset>
+					<lengend> <button type="button" onclick= "window.location.href ='index.html';">Home</button> <button type="button" onclick="window.location.href ='addNewAddress.html';">Add A New Address</button></lengend>
+					<div class = "row">
+						<table style="width:100%">
+						  <tr>
+						    <th>Address line1</th> 
+						    <th>Address line2</th> 
+						    <th>Postal Code</th> 
+						    <th>City</th>
+						    <th>State</th> 
+						    <th>Country</th> 
+						    <th>Card Number</th>
+						    <th>Action</th>
+						  </tr>
+
+						  <tr>
+						    <td>9999 N 18th st</td> 
+						    <td></td>
+						    <td>60311</td>
+						    <td>Chicago</td>
+						    <td>IL</td>
+						    <td>US</td>
+						    <td>7777777777777</td>
+						    <td><button type="button" onclick="delete()">Delete</button></td>
+						  </tr>
+						  <tr>
+						    <td>3321 E 56th ST</td> 
+						    <td></td>
+						    <td>60333</td>
+						    <td>Chicago</td>
+						    <td>IL</td>
+						    <td>US</td>
+						    <td>888888888888</td>
+						    <td><button type="button" onclick="delete()">Delete</button></td>
+						  </tr>
+						</table>
+					 
+
+				</fieldset>
+			</form>
+	</body>

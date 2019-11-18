@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+	<!-- this page will likely be embedded somewhere else -->
+	<head>
+		<title>Credit Card</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+		<link rel="stylesheet" href="main.css" />
+		<script src="sha.js"> </script>
+
+	</head>
+
+	<!--input type name matches schema planning names-->
+
+	<body>
+		<div class = "creditCard">
+			<h2>Add New Address
+			</h2>
+			<form>
+				<fieldset>
+					<legend>Add New Card</legend>
+					<div class="row">
+						<label for="line1">Address line1</label>
+						<input type="line1" name="line1-input-su"/>
+					</div>
+					<div class="row">
+						<label for="line2">Address line2</label>
+						<input type="line2" name="line2-input-su"/>
+					</div>
+					<div class="row">
+						<label for="postalCode">postal Code</label>
+						<input type="postalCode" name="postalCode-input-su"/>
+					</div>
+					<div class="row">
+						<label for="city">City</label>
+						<input type="city" name="cvcCode-input-su"/>
+					</div>
+					<div class="row">
+						<label for="state">State</label>
+						<input type="state" name="state-input-su"/>
+					</div>
+					<div class="row">
+						<label for="country">Country</label>
+						<input type="country" name="country-input-su"/>
+					</div>
+
+					<div class="row" id='manage-info'>
+			            <div class="row">
+			                <button type="button" onclick="save()">Save</button>
+			            </div>
+
+		            	<div class="crow">
+			                <button type="button" onclick="window.location.href ='myAddresses.html';">Back</button>
+			            </div>
+
+		        	</div>
+						
+					
+
+					 
+
+				</fieldset>
+			</form>
+	</body>
