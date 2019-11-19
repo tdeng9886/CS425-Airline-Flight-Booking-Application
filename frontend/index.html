@@ -20,7 +20,7 @@
                     background-repeat: no-repeat;
                     background-position: center;
                     background-attachment: fixed;
-                    min-height: 250px;
+                    min-height: 425px;
                 }
 
                 div#flight-search div {
@@ -40,10 +40,10 @@
                 #manage-info {
                     min-height: 200px;
                 }
+
                 .row {
                     width: 100%;
                 }
-
 
                 #logout-area {
                     text-align: right;
@@ -69,7 +69,7 @@
                     console.error(e);
                     logout();
                 }
-                document.getElementById('bind-customer-name').innerHTML = customer.name;
+                document.getElementById('bind-customer-name').innerHTML = ", " + customer.name;
             }
         </script>
     </head><body onload="onload()">
