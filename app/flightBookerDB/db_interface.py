@@ -35,7 +35,8 @@ def addCustomerAddress(customerId, line1, line2, postalCode, city, state, countr
 
 def getCustomerAddresses(customerId):
     c = conn.cursor()
-    ret = list(c.execute("SELECT * FROM customerAddresses WHERE customerId = %s", customerId))
+    c.execute("SELECT * FROM customerAddresses WHERE customerId = %s", customerId)
+    ret = list(c.fetchall())
     c.close()
     return ret
 
@@ -156,4 +157,13 @@ def deleteCreditCard (cardId, customerId):
     c = conn.cursor()
     c.execute("DELETE FROM creditCard WHERE cardId = %s AND customerId = %s", (cardId, customerId))
     ros_deleted = c.rowcount
+    c.close()
     return bool(rows_deleted)
+
+
+def getCreditCards(customerId):
+    c = conn.cursor()
+    c.execute("SELECT * FROM creditCard WHERE customerId=%sl", (customerId, ))
+    ret = c.fetchall()
+    c.close()
+    return ret

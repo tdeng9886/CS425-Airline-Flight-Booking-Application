@@ -113,7 +113,7 @@ def addCustomerAddress():
         'message': 'Customer address added.'
     }
 
-@app.route('/customer/address/get', methods=['POST'])
+@app.route('/customer/address/list', methods=['GET'])
 def getCustomerAddress():
     customerId = authUser(request.headers)
     if not customerId:
@@ -125,9 +125,6 @@ def getCustomerAddress():
             'result': True,
             'addresses': customerAddresses
         }
-    return {
-        'result': False
-    }
 
 @app.route('/customer/address/delete', methods=['POST'])
 def deleteCustomerAddress():
@@ -146,7 +143,7 @@ def deleteCustomerAddress():
         'result': False
     }
 
-@app.route('/customer/creditCard/add', methods=['POST'])
+@app.route('/customer/cc/add', methods=['POST'])
 def addCreditCard():
     customerId = authUser(request.headers)
     if not customerId:
@@ -165,23 +162,20 @@ def addCreditCard():
         'result': True,
         'message': 'Successfully added a new credit card.'
     }
-@app.route('/customer/creditCard/get', methods = ['POST'])
+@app.route('/customer/cc/list', methods = ['GET'])
 def getCreditCard():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
-    creditCard = db_interface.getCreditCard(customerId)
+    creditCards = db_interface.getCreditCards(customerId)
     if creditCard:
         return {
             'result': True,
-            'creditCard': creditCard
+            'creditCard': creditCards
         }
-    return {
-        'result': False
-    }
 
 
-@app.route('/customer/creditCard/delete', methods=['POST'])
+@app.route('/customer/cc/delete', methods=['POST'])
 def deleteCreditCard():
     customerId = authUser(request.headers)
     if not customerId:
