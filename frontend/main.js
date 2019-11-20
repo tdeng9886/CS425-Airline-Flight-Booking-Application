@@ -64,6 +64,6 @@ const cs425 = {
 (function checkAuth() {
     let token;
     if (!(token = cs425.getCookie('authToken')))
-        window.location = '/web/login.html';
-
+        window.location = 'login.html';
+        
 })();

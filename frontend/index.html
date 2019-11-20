@@ -20,7 +20,7 @@
                     background-repeat: no-repeat;
                     background-position: center;
                     background-attachment: fixed;
-                    min-height: 250px;
+                    min-height: 425px;
                 }
 
                 div#flight-search div {
@@ -32,7 +32,9 @@
                     border: 1px solid grey;
                     background-color: #fff;
                 }
-
+                div#flight-search div div {
+                    max-width: 100%;
+                }
                 #flight-date {
                     padding: 25px;
                 }
@@ -40,10 +42,10 @@
                 #manage-info {
                     min-height: 200px;
                 }
+
                 .row {
                     width: 100%;
                 }
-
 
                 #logout-area {
                     text-align: right;
@@ -69,7 +71,7 @@
                     console.error(e);
                     logout();
                 }
-                document.getElementById('bind-customer-name').innerHTML = customer.name;
+                document.getElementById('bind-customer-name').innerHTML = ", " + customer.name;
             }
         </script>
     </head><body onload="onload()">
