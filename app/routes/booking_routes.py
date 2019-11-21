@@ -7,10 +7,9 @@ from flask import request
 def createBooking():
     customerId = request.headers.get('customerId')
     data = request.json
-    customerId = data['customerId']
-    flightId = data['flightId']
-
-    db_interface.createBooking(customerId, flightId)
+    route = data['route']
+    for flight in route:
+        db_interface.createBooking(customerId, flight[0])
 
     return {
         'result': True,
