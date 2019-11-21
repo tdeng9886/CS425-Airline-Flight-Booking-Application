@@ -34,9 +34,21 @@ def addCustomerAddress(customerId, line1, line2, postalCode, city, state, countr
 
 
 def getCustomerAddresses(customerId):
+    #print("cid:", customerId, flush=True);
     c = conn.cursor()
-    c.execute("SELECT * FROM customerAddresses WHERE customerId = %s", customerId)
-    ret = list(c.fetchall())
+    c.execute("SELECT addressId, line1, line2, postalCode, city, state, country FROM customerAddresses WHERE customerId = %s", (customerId,))
+    ret = c.fetchall()
+
+    ret = list(map(lambda t: {
+            "addressId" : t[0],
+            "line1": t[1],
+            "line2": t[2],
+            "postalCode": t[3],
+            "city": t[4], 
+            "state" : t[5],
+            "country" : t[6],
+            }, ret))
+    print(ret, flush=True)
     c.close()
     return ret
 

@@ -120,11 +120,11 @@ def getCustomerAddress():
         return "unauthorized", 401
 
     customerAddresses = db_interface.getCustomerAddresses(customerId)
-    if customerAddresses:
-        return {
-            'result': True,
-            'addresses': customerAddresses
-        }
+    return {
+        'result': True,
+        'addresses': customerAddresses
+    }, 200
+
 
 @app.route('/customer/address/delete', methods=['POST'])
 def deleteCustomerAddress():

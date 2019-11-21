@@ -53,7 +53,11 @@
 			<script>
 				(async function pupulateList(){
 					const t = document.getElementById("address-table");
+					try {
 					const ret = await cs425.api.get("/customer/address/list");
+					} catch (e) {
+						console.error(e);
+					}
 					ret.forEach(addr =>
 						t.innerHTML += `<tr>
 							<td>${ret.line1}</td>
