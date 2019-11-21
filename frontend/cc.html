@@ -44,11 +44,53 @@
 				</fieldset>
 			</form>
 			<script>
-				(async function populateTable(){
-					
-				})();
-				async function delete(item){
 
+				let addresses = {};
+
+				async function loadAddresses() {
+					const ret = await cs425.api.get('/customer/address/list');
+					const addrSel = document.getElementById("billing-addr");
+					ret.forEach(addr =>
+						addrSel.innerHTML += `<option value="${addr.addressId}">${addr.line1 + ' ' + addr.line2}</option>`);
+
+				}
+
+				(async function populateTable(){
+					let resp;
+					try {
+						resp = await cs425.api.get("/customer/cc/list");
+						console.log(resp);
+					} catch (e) {
+						console.error(e);
+					}
+
+					    ret = list(map(lambda t: {
+					        "cardId" : t[0],
+					        'addressId' : t[1],
+					        'cardNumber' : t[2],
+					        'expiration' : t[3],
+					        'nameOnCard' : t[4],
+					        'cvcCode' : t[5],
+					    }, ret))
+					const t = document.getElementById('manage-info');
+					resp.cards.forEach(cc =>
+						t.innerHTML += `<tr>
+							<td>${cc.cardNumber}</td>
+							<td>${cc.expiration}</td>
+							<td>${cc.nameOnCard}</td>
+							<td>${cc.cvcCode}</td>
+							<td>${addresses[cc.addressId] || cc.addressId }</td>
+						</tr>`
+					);
+				})();
+
+				async function delete(id) {
+					try {
+						const resp = await cs425.api.post("/customer/cc/delete", { addressId : id });
+						console.log(resp);
+					} catch (e) {
+						console.error(e);
+					}
 				}
 			</script>
 	</body>

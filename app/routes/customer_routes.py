@@ -171,7 +171,7 @@ def getCreditCard():
     if creditCard:
         return {
             'result': True,
-            'creditCard': creditCards
+            'cards': creditCards
         }
 
 

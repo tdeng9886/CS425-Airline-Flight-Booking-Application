@@ -44,7 +44,7 @@ def getCustomerAddresses(customerId):
             "line1": t[1],
             "line2": t[2],
             "postalCode": t[3],
-            "city": t[4], 
+            "city": t[4],
             "state" : t[5],
             "country" : t[6],
             }, ret))
@@ -201,7 +201,17 @@ def deleteCreditCard (cardId, customerId):
 
 def getCreditCards(customerId):
     c = conn.cursor()
-    c.execute("SELECT * FROM creditCard WHERE customerId=%sl", (customerId, ))
+    c.execute("SELECT cardId, addressId, cardNumber, expiration, nameOnCard, cvcCode FROM creditCard WHERE customerId=%sl", (customerId, ))
     ret = c.fetchall()
     c.close()
+
+    ret = list(map(lambda t: {
+        "cardId" : t[0],
+        'addressId' : t[1],
+        'cardNumber' : t[2],
+        'expiration' : t[3],
+        'nameOnCard' : t[4],
+        'cvcCode' : t[5],
+    }, ret))
+
     return ret
