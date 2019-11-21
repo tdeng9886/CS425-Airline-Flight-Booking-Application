@@ -49,18 +49,21 @@ def deleteCustomerAddress(addressId, customerId):
     return bool(rows_deleted)
 
 
-def createBooking(flightId, customerId):
+def createBooking(bookingId, customerId, flightId, routeClass):
     c = conn.cursor()
-    c.execute(" INSERT INTO bookings VALUE(%s,%s)", (
+    c.execute("INSERT INTO bookings VALUES (%s,%s,%s,%s)", (
+            bookingId,
             customerId,
-            flightId)
+            flightId,
+            routeClass)
     )
     c.close()
     return True
 
 
-def getBooking(customerId):
-    c = conn.cursor().execute("SELECT * FROM bookings WHERE customerId = %s", customerId)
+def getBookings(customerId):
+    c = conn.cursor()
+    c.execute("SELECT * FROM bookings WHERE customerId = %s", (customerId,))
     ret = [x for x in c]
     c.close()
     return ret
@@ -68,10 +71,21 @@ def getBooking(customerId):
 
 def deleteBooking(bookingId):
     c = conn.cursor()
-    c.execute("DELETE FROM bookings WHERE bookingId = %s", bookingId)
+    c.execute("DELETE FROM bookings WHERE bookingId = %s", (bookingId,))
     rows_deleted = c.rowcount
     c.close()
     return bool(rows_deleted)
+
+def getLastBookingNumber():
+    c = conn.cursor()
+    c.execute("SELECT bookingId FROM bookings ORDER BY bookingId DESC LIMIT 1")
+
+    if c.rowcount == 0:
+        return 0
+    else:
+        ret = c.fetchone()[0]
+        c.close()
+        return ret
 
 
 # Airports, Flights, Routing
@@ -104,6 +118,7 @@ def getFlights(departAirportId, departTime, latestDepart):
     c.close()
     return ret
 
+
 def getFlightPrice(flightId):
     c = conn.cursor()
     c.execute("""
@@ -113,6 +128,17 @@ def getFlightPrice(flightId):
         ORDER BY ts DESC
         """, (flightId,))
     ret = [x for x in c]
+    c.close()
+    return ret
+
+
+def getFlightInfo(flightId):
+    c = conn.cursor()
+    c.execute("""
+    SELECT *
+    FROM flights
+    WHERE flightId = %s""", (flightId,))
+    ret = c.fetchone()
     c.close()
     return ret
 

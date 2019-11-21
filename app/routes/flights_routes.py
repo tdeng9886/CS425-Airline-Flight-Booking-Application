@@ -75,35 +75,6 @@ def routeFlight():
     routes = routeFlight_rec(
         departAirportId, departTime, arriveAirportId, tokens, waitTime
     )
-    '''
-    {
-        'unsortedRoutes':
-            [
-                {
-                    routeData: {
-                        routeTime: timedelta,
-                        routeEcoCost: float,
-                        routeFirstCost: float
-                    },
-                    route: [
-                        (flight1),
-                        (flight2),
-                        (...),
-                        (flightn)
-                    ]
-                }
-            ],
-        'speedSortedRoutes': [
-            ...
-        ],
-        'ecoSortedRoutes': [
-            ...
-        ],
-        'firstSortedRoutes': [
-            ...
-        ]
-    }
-    '''
 
     outputRoutes = {'unsortedRoutes': []}
     for route in routes:

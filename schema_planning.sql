@@ -2,7 +2,7 @@
 
 
 CREATE TABLE customers (
-	customerId BIGINT PRIMARY KEY,
+	customerId SERIAL,
 	email VARCHAR(50) UNIQUE NOT NULL,
 	name VARCHAR(65) NOT NULL,
 	password CHAR(128) NOT NULL,
@@ -67,5 +67,6 @@ CREATE TABLE bookings (
 	bookingId BIGINT NOT NULL,
 	customerId BIGINT REFERENCES customers,
 	flightId BIGINT REFERENCES flights,
+	routeClass VARCHAR(7) CHECK (routeClass IN ('first', 'economy')),
 	PRIMARY KEY(bookingId, flightId, customerId)
 );
