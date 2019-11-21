@@ -13,7 +13,7 @@
 			<h2>Manage Addresses</h2>
 			<form>
 				<fieldset>
-					<lengend> <button type="button" onclick= "window.location.href ='index.html';">Home</button> <button type="button" onclick="window.location.href ='addNewAddress.html';">Add A New Address</button></lengend>
+					<lengend> <button type="button" onclick= "window.location ='index.html';">Home</button> <button type="button" onclick="window.location ='add-address.html';">Add A New Address</button></lengend>
 					<div class = "row">
 						<table style="width:100%" id="address-table">
 						  <tr>
@@ -26,24 +26,6 @@
 						    <th>Action</th>
 						  </tr>
 
-						  <tr>
-						    <td>9999 N 18th st</td>
-						    <td></td>
-						    <td>60311</td>
-						    <td>Chicago</td>
-						    <td>IL</td>
-						    <td>US</td>
-						    <td><button type="button" onclick="delete()">Delete</button></td>
-						  </tr>
-						  <tr>
-						    <td>3321 E 56th ST</td>
-						    <td></td>
-						    <td>60333</td>
-						    <td>Chicago</td>
-						    <td>IL</td>
-						    <td>US</td>
-						    <td><button type="button" onclick="delete()">Delete</button></td>
-						  </tr>
 						</table>
 
 
@@ -72,6 +54,16 @@
 						</tr>`);
 				})();
 
+
+				//
+				async function delete(id) {
+					try {
+						const resp = await cs425.api.post("/customer/address/delete", { addressId : id });
+						console.log(resp);
+					} catch (e) {
+						console.error(e);
+					}
+				}
 
 			</script>
 
