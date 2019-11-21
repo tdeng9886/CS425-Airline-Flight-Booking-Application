@@ -77,19 +77,20 @@
 				if (df.cvc) cvcCodeBox.value = '';
 			}
 
-			addressId = data['addressId']
-		    cardNumber = data['cardNumber']
-		    expiration = data['expiration']
-		    nameOnCard = data['nameOnCard']
-		    cvcCode = data['cvcCode']
-
-			await cs425.api.post("/cc/add", {
-				cardNumber: cardNumberBox.value,
-				expiration: expirationBox.value,
-				nameOnCard: nameOnCardBox.value,
-				addressId: addressBox.value,
-
-			});
+			try {
+				const resp = await cs425.api.post("/cc/add", {
+					cardNumber: cardNumberBox.value,
+					expiration: expirationBox.value,
+					nameOnCard: nameOnCardBox.value,
+					addressId: addressBox.value,
+					cvcCode: cvcCodeBox.value,
+				});
+				console.log(resp);
+			} catch(e) {
+				console.error(e);
+			}
+			
+			//window.location = 'cc.html';
 
 		}
 		</script>
