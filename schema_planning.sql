@@ -13,7 +13,7 @@ CREATE TABLE customerAddresses (
 	customerId BIGINT REFERENCES customers,
 	line1 VARCHAR(120) NOT NULL,
 	line2 VARCHAR(120) NOT NULL,
-	postalCode INT NOT NULL,
+	postalCode CHAR(5) NOT NULL,
 	city VARCHAR(85) NOT NULL,
 	state VARCHAR(40) NOT NULL,
 	country VARCHAR(45) NOT NULL
