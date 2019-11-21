@@ -5,7 +5,7 @@ from flask import request
 import re
 
 
-@app.route('/customer', methods=['GET'])
+@app.route('/customer', methods=['GET', 'POST'])  # Working
 def describeCustomer():
     customerId = authUser(request.headers)
     if not customerId:
@@ -16,31 +16,32 @@ def describeCustomer():
     cus = c.fetchone()
     c.close()
 
-    #print(cus, flush=True)
+    # print(cus, flush=True)
 
     return {
-        'email' : cus[1],
-        'name' : cus[2],
+        'email': cus[1],
+        'name': cus[2],
     }
 
-@app.route('/customer/login', methods=['POST'])
+
+@app.route('/customer/login', methods=['POST'])  # Works
 def login():
     data = request.json
     email = data['email']
     password = data['password']
-    token = loginUser(email,password)
+    token = loginUser(email, password)
 
     if not token:
         return {
-            'message' : 'Invalid credentials'
+            'message': 'Invalid credentials'
         }, 401
     else:
         return {
-            'token' : token
+            'token': token
         }
 
 
-@app.route('/customer/create', methods=['POST'])
+@app.route('/customer/create', methods=['POST'])  # Works
 def createCustomer():
     #try:
     data = request.json
@@ -90,7 +91,7 @@ def createCustomer():
     }
 
 
-@app.route('/customer/address/add', methods=['POST'])
+@app.route('/customer/address/add', methods=['POST'])  # WORKING
 def addCustomerAddress():
 
     customerId = authUser(request.headers)
@@ -106,14 +107,16 @@ def addCustomerAddress():
     state = data['state']
     country = data['country']
 
-    db_interface.addCustomerAddress(customerId, line1, line2, postalCode, city, state, country)
+    addressId = db_interface.getLastAddressNumber() + 1
+    db_interface.addCustomerAddress(addressId, customerId, line1, line2, postalCode, city, state, country)
 
     return {
-        'result': True,
+        'addressId': addressId,
         'message': 'Customer address added.'
     }
 
-@app.route('/customer/address/list', methods=['GET'])
+
+@app.route('/customer/address/list', methods=['GET', 'POST'])  # WORKING
 def getCustomerAddress():
     customerId = authUser(request.headers)
     if not customerId:
@@ -126,7 +129,7 @@ def getCustomerAddress():
     }, 200
 
 
-@app.route('/customer/address/delete', methods=['POST'])
+@app.route('/customer/address/delete', methods=['POST'])  # WORKING
 def deleteCustomerAddress():
 
     customerId = authUser(request.headers)
@@ -135,7 +138,7 @@ def deleteCustomerAddress():
 
     data = request.json
     addressId = data['addressId']
-    if deleteCustomerAddress(addressId, customerId):
+    if db_interface.deleteCustomerAddress(addressId, customerId):
         return {
             'result': True
         }
@@ -143,7 +146,8 @@ def deleteCustomerAddress():
         'result': False
     }
 
-@app.route('/customer/cc/add', methods=['POST'])
+
+@app.route('/customer/cc/add', methods=['POST'])  # WORKING
 def addCreditCard():
     customerId = authUser(request.headers)
     if not customerId:
@@ -156,37 +160,44 @@ def addCreditCard():
     nameOnCard = data['nameOnCard']
     cvcCode = data['cvcCode']
 
-    db_interface.addCreditCard(customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode)
+    cardId = db_interface.getLastCreditCardNumber() + 1
+    print(cardId, customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode)
+
+    db_interface.addCreditCard(cardId, customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode)
 
     return {
-        'result': True,
+        'cardId': cardId,
         'message': 'Successfully added a new credit card.'
     }
-@app.route('/customer/cc/list', methods = ['GET'])
+
+@app.route('/customer/cc/list', methods = ['GET', 'POST'])  # WORKING
 def getCreditCard():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
     creditCards = db_interface.getCreditCards(customerId)
-    if creditCard:
+    if creditCards:
         return {
             'result': True,
             'creditCard': creditCards
         }
 
 
-@app.route('/customer/cc/delete', methods=['POST'])
+@app.route('/customer/cc/delete', methods=['POST'])  # WORKING
 def deleteCreditCard():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
 
     data = request.json
-    cardId = data ['cardId']
-    if deleteCreditCard(cardId, customerId):
-        return{
-        'result':True
-        }
+    cardId = data['cardId']
+    customerCreditCards = db_interface.getCreditCards(customerId)
+    for creditCard in customerCreditCards:
+        if cardId == creditCard[0]:
+            if db_interface.deleteCreditCard(cardId, customerId):
+                return {
+                    'result': True
+                }, 200
     return{
-        'result':False
-    }
+        'result': False
+    }, 403
