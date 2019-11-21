@@ -4,15 +4,17 @@ from flask import request
 from datetime import datetime, timedelta
 from app.auth import authUser
 
-# we could require authentication for these... but that jsut makes debugging harder
+# we could require authentication for these... but that just makes debugging harder
 
-@app.route('/flights/airports', methods=['POST'])
+@app.route('/flights/airports', methods=['POST'])  # Working
 def getAirports():
-    return db_interface.getAirports()
+    return {
+        "airports": db_interface.getAirports()
+    }
 
 # Taking two airportIds:
-@app.route('/flights/score', methods=['POST'])
-def scoreFlight(route=None, departTime=None):
+@app.route('/flights/score', methods=['POST'])  # I don't think this should ever be used as an endpoint.
+def scoreFlight(route=None, departTime=None):   # In any case, the funtion itself works.
     # Time of Flight
     if not route:
         data = request.json
@@ -38,7 +40,7 @@ Inputs:
 }
 
 Outputs: """
-@app.route('/flights/search', methods=['GET', 'POST'])
+@app.route('/flights/search', methods=['GET', 'POST'])  # Working
 def routeFlight():
     def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2, waitTime=1):
         if tokens == 0:

@@ -2,14 +2,14 @@
 
 
 CREATE TABLE customers (
-	customerId SERIAL,
+	customerId SERIAL PRIMARY KEY,
 	email VARCHAR(50) UNIQUE NOT NULL,
 	name VARCHAR(65) NOT NULL,
 	password CHAR(128) NOT NULL,
 	authToken VARCHAR(64) UNIQUE NOT NULL
 );
 CREATE TABLE customerAddresses (
-	addressId BIGINT PRIMARY KEY,
+	addressId BIGINT PRIMARY KEY;
 	customerId BIGINT REFERENCES customers,
 	line1 VARCHAR(120) NOT NULL,
 	line2 VARCHAR(120) NOT NULL,

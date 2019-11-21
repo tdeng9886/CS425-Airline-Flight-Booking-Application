@@ -18,9 +18,10 @@ def checkEmail(email):  # Returns True if email not in DB, False if it is.
     c.close()
     return True
 
-def addCustomerAddress(customerId, line1, line2, postalCode, city, state, country):
+def addCustomerAddress(addressId, customerId, line1, line2, postalCode, city, state, country):
     c = conn.cursor()
-    c.execute("INSERT INTO customers VALUES (%s, %s, %s, %s, %s, %s, %s)", (
+    c.execute("INSERT INTO customerAddresses VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (
+        addressId,
         customerId,
         line1,
         line2,
@@ -31,6 +32,18 @@ def addCustomerAddress(customerId, line1, line2, postalCode, city, state, countr
     )
     c.close()
     return True
+
+def getLastAddressNumber():
+    c = conn.cursor()
+    c.execute("SELECT addressId FROM customerAddresses ORDER BY customerAddresses DESC LIMIT 1")
+
+    if c.rowcount == 0:
+        return 0
+    else:
+        ret = c.fetchone()[0]
+        c.close()
+        return ret
+
 
 
 def getCustomerAddresses(customerId):
@@ -81,9 +94,9 @@ def getBookings(customerId):
     return ret
 
 
-def deleteBooking(bookingId):
+def deleteBooking(bookingId, customerId):
     c = conn.cursor()
-    c.execute("DELETE FROM bookings WHERE bookingId = %s", (bookingId,))
+    c.execute("DELETE FROM bookings WHERE bookingId = %s AND customerId = %s", (bookingId, customerId))
     rows_deleted = c.rowcount
     c.close()
     return bool(rows_deleted)
@@ -104,7 +117,13 @@ def getLastBookingNumber():
 def getAirports():
     c = conn.cursor()
     c.execute("SELECT * FROM airports")
-    ret = [x for x in c]
+    ret = c.fetchall()
+    ret = list(map(lambda t: {
+            "airportId" : t[0],
+            "name": t[1],
+            "country": t[2],
+            "state": t[3],
+            }, ret))
     c.close()
     return ret
 
@@ -177,9 +196,10 @@ def addPrice(flightId, economyPrice, firstClassPrice, ts):
     c.close()
 
  # Add a new credit card
-def addCreditCard(customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode):
+def addCreditCard(cardId, customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode):
     c = conn.cursor()
-    c.execute ("INSERT INTO customers VALUES (%s, %s, %s, %s, %s, %s)",(
+    c.execute ("INSERT INTO customerCreditCards VALUES (%s, %s, %s, %s, %s, %s, %s)",(
+        cardId,
         customerId,
         addressId,
         cardNumber,
@@ -190,11 +210,22 @@ def addCreditCard(customerId, addressId, cardNumber, expiration, nameOnCard, cvc
     c.close()
     return True
 
+def getLastCreditCardNumber():
+    c = conn.cursor()
+    c.execute("SELECT cardId FROM customerCreditCards ORDER BY cardId DESC LIMIT 1")
+
+    if c.rowcount == 0:
+        return 0
+    else:
+        ret = c.fetchone()[0]
+        c.close()
+        return ret
+
 # Delete credit card
 def deleteCreditCard (cardId, customerId):
     c = conn.cursor()
-    c.execute("DELETE FROM creditCard WHERE cardId = %s AND customerId = %s", (cardId, customerId))
-    ros_deleted = c.rowcount
+    c.execute("DELETE FROM customerCreditCards WHERE cardId = %s AND customerId = %s", (cardId, customerId))
+    rows_deleted = c.rowcount
     c.close()
     return bool(rows_deleted)
 

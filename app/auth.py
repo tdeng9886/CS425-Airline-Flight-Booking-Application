@@ -38,9 +38,10 @@ def loginUser(email, password):
 
 def authUser(headers):
     try:
-        authToken = headers.get('Authentication').split(' ')[1]
+        # authToken = headers.get('Authentication').split(' ')[1]
+        authToken = headers.get('Authentication')
         c = db_interface.conn.cursor()
-        c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken, ))
+        c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken,))
         id = c.fetchone()
         c.close()
         id = id[0]

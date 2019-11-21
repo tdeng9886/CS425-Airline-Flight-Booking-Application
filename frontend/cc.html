@@ -51,7 +51,7 @@
 					const ret = await cs425.api.get('/customer/address/list');
 					const addrSel = document.getElementById("billing-addr");
 					ret.forEach(addr =>
-						addrSel.innerHTML += `<option value="${addr.addressId}">${addr.line1 + ' ' + addr.line2}</option>`);
+						addresses[addr.addressId] = addr.line1 + ' ' + addr.line2);
 
 				}
 

@@ -2,6 +2,7 @@ from app import app
 from app.flightBookerDB import db_interface
 from app.routes import flights_routes
 from flask import request
+from app.auth import authUser
 
 ''' Input JSON:
 {
@@ -34,7 +35,9 @@ from flask import request
 '''
 @app.route('/bookings/add', methods=['POST'])  # WORKING
 def createBooking():
-    customerId = request.headers.get('customerId')
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
     data = request.json
     route = data['route']
     routeClass = data['routeClass']
@@ -46,11 +49,13 @@ def createBooking():
     }, 200
 
 '''
-Only argument is cusotmerId in header.
+Only argument is Authentication token in header.
 '''
 @app.route('/bookings/get', methods=['POST'])  # WORKING
 def getBooking():
-    customerId = request.headers.get('customerId')
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
     bookings = db_interface.getBookings(customerId)
     booking_map = {}  # Simplified - form {bookingId: [flight]}
     for booking in bookings:
@@ -88,17 +93,14 @@ def getBooking():
         "message": "No bookings found."
     }, 400
 
-'''
-{
-	"bookingId": 2
-}
-'''
 @app.route('/bookings/delete', methods=['POST'])  # WORKING
 def deleteBooking():
-    customerId = request.headers.get('customerId')
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
     data = request.json
     bookingId = data['bookingId']
-    if db_interface.deleteBooking(bookingId):
+    if db_interface.deleteBooking(bookingId, customerId):
         return {
             "message": "Booking removed."
         }
