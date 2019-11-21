@@ -13,57 +13,69 @@
 
 	<body>
 		<div class = "creditCard">
-			<h2>Add New Address
-			</h2>
+			<h2>Add New Address</h2>
 			<form>
 				<fieldset>
 					<legend>Add New Card</legend>
 					<div class="row">
 						<label for="line1">Address line1</label>
-						<input type="line1" name="line1-input-su"/>
+						<input type="text" name=line1 id="line1-input"/>
 					</div>
 					<div class="row">
 						<label for="line2">Address line2</label>
-						<input type="line2" name="line2-input-su"/>
+						<input type="text" name=line2 id="line2-input"/>
 					</div>
 					<div class="row">
 						<label for="postalCode">postal Code</label>
-						<input type="postalCode" name="postalCode-input-su"/>
+						<input type="text" name=postalCode id="postalCode-input"/>
 					</div>
 					<div class="row">
 						<label for="city">City</label>
-						<input type="city" name="cvcCode-input-su"/>
+						<input type="text" name=city id="city-input"/>
 					</div>
 					<div class="row">
 						<label for="state">State</label>
-						<input type="state" name="state-input-su"/>
+						<input type="text" name=state id="state-input"/>
 					</div>
 					<div class="row">
 						<label for="country">Country</label>
-						<input type="country" name="country-input-su"/>
+						<input type="text" name=country id="country-input"/>
 					</div>
 
 					<div class="row" id='manage-info'>
 			            <div class="row">
 			                <button type="button" onclick="save()">Save</button>
 			            </div>
-
 		            	<div class="crow">
 			                <button type="button" onclick="window.location.href ='myAddresses.html';">Back</button>
 			            </div>
-
 		        	</div>
-
-
-
 
 
 				</fieldset>
 			</form>
 		</div>
 	<script>
+		async function save(){
+			const line1 	 = document.getElementById("line1-input").value;
+			const line2 	 = document.getElementById("line2-input").value;
+			const postalCode = document.getElementById("postalCode-input").value;
+			const city 	 	 = document.getElementById("city-input").value;
+			const state 	 = document.getElementById("state-input").value;
+			const country 	 = document.getElementById("country-input").value;
 
-
+			try {
+				const resp = await cs425.api.post("/customer/address/add", {
+					line1, line2, postalCode, city, state, country
+				});
+				console.log({resp});
+			} catch (e) {
+				alert("sorry that failed", e);
+				console.error(e);
+			}
+			
+			window.location = 'address.html';
+		}
 	</script>
 
 	</body>

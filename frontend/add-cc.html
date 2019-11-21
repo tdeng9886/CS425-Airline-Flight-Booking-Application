@@ -9,8 +9,6 @@
 
 	</head>
 
-	<!--input type name matches schema planning names-->
-
 	<body>
 		<div class = "creditCard">
 			<h2>Add New Credit Cards</h2>
@@ -34,7 +32,11 @@
 						<input type="number" name="cvcCode-input-su"/>
 					</div>
 					<div class="row">
-						<label for=""
+						<label >Billing Address</label>
+						<select id="billing-addr">
+
+						</select>
+
 					</div>
 					<div class="row" id='manage-info'>
 			            <div class="row">
@@ -55,9 +57,9 @@
 
 		(async function populateAddresses() {
 			const ret = await cs425.api.get('/customer/address/list');
-			ret.forEach(addr => {
-				
-			})
+			const addrSel = document.getElementById("billing-addr");
+			ret.forEach(addr =>
+				addrSel.innerHTML += `<option value="${addr.addressId}">${addr.line1 + ' ' + addr.line2}</option>`);
 		})();
 
 		async function save() {
