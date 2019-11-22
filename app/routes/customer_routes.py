@@ -191,15 +191,12 @@ def deleteCreditCard():
     if not customerId:
         return "unauthorized", 401
 
+    c = db_interface.conn.cursor()
     data = request.json
-    cardId = data['cardId']
-    customerCreditCards = db_interface.getCreditCards(customerId)
-    for creditCard in customerCreditCards:
-        if cardId == creditCard[0]:
-            if db_interface.deleteCreditCard(cardId, customerId):
-                return {
-                    'result': True
-                }, 200
-    return{
-        'result': False
-    }, 403
+    c.execute("DELETE FROM customerCreditCards WHERE cardId=%s;", ( data["cardId"], ))
+    rc = c.rowcount
+    c.close()
+    if rc:
+        return { 'result' : True }, 200
+    else:
+        return { 'result' : False }, 403
