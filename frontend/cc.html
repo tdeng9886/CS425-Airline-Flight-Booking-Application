@@ -31,10 +31,13 @@
         				</div>
 
 					<div class = "row">
-						<table style="width:100%">
+						<table style="width:100%" id="card-list">
 						  <tr>
-						    <th>Address</th>
 						    <th>Card Number</th>
+						    <th>Expiration</th>
+						    <th>Name On Card</th>
+						    <th>CVC</th>
+						    <th>Address</th>
 						    <th>Action</th>
 						  </tr>
 
@@ -50,8 +53,9 @@
 				async function loadAddresses() {
 					try {
 						const ret = await cs425.api.get('/customer/address/list');
-						const addrSel = document.getElementById("billing-addr");
-						ret.forEach(addr =>
+						console.log({ret});
+						//const addrSel = document.getElementById("billing-addr");
+						ret.addresses.forEach(addr =>
 							addresses[addr.addressId] = addr.line1 + ' ' + addr.line2);
 					} catch (e) {
 						console.error(e);
@@ -69,7 +73,7 @@
 
 					await loadAddresses();
 
-					const t = document.getElementById('manage-info');
+					const t = document.getElementById('card-list');
 					resp.cards.forEach(cc =>
 						t.innerHTML += `<tr>
 							<td>${cc.cardNumber}</td>
@@ -77,14 +81,14 @@
 							<td>${cc.nameOnCard}</td>
 							<td>${cc.cvcCode}</td>
 							<td>${addresses[cc.addressId] || cc.addressId }</td>
-							<td><button onclick="delete(${cc.cardId})">Delete</button></td>
+							<td><button onclick="del(${cc.cardId})">Delete</button></td>
 						</tr>`
 					);
 				})();
 
-				async function delete(id) {
+				async function del(id) {
 					try {
-						const resp = await cs425.api.post("/customer/cc/delete", { addressId : id });
+						const resp = await cs425.api.post("/customer/cc/delete", { cardId : id });
 						console.log(resp);
 					} catch (e) {
 						console.error(e);

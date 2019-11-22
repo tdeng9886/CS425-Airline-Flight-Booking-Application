@@ -43,20 +43,20 @@
 					}
 					ret.addresses.forEach(addr =>
 						t.innerHTML += `<tr>
-							<td>${ret.line1}</td>
-							<td>${ret.line2}</td>
-							<td>${ret.postalCode}</td>
-							<td>${ret.city}</td>
-							<td>${ret.state}</td>
-							<td>${ret.country}</td>
+							<td>${addr.line1}</td>
+							<td>${addr.line2}</td>
+							<td>${addr.postalCode}</td>
+							<td>${addr.city}</td>
+							<td>${addr.state}</td>
+							<td>${addr.country}</td>
 							<td><button type="button"
-								onclick="delete(${ret.addressId})"
+								onclick="del(${addr.addressId})"
 							>delete</button></td>
 						</tr>`);
 				})();
 
 				//
-				async function delete(id) {
+				async function del(id) {
 					try {
 						const resp = await cs425.api.post("/customer/address/delete", { addressId : id });
 						console.log(resp);

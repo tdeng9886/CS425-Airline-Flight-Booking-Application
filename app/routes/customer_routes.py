@@ -160,6 +160,7 @@ def addCreditCard():
     nameOnCard = data['nameOnCard']
     cvcCode = data['cvcCode']
 
+    # lol wut
     cardId = db_interface.getLastCreditCardNumber() + 1
     print(cardId, customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode)
 
@@ -168,7 +169,8 @@ def addCreditCard():
     return {
         'cardId': cardId,
         'message': 'Successfully added a new credit card.'
-    }
+    },200
+
 
 @app.route('/customer/cc/list', methods = ['GET', 'POST'])  # WORKING
 def getCreditCard():
@@ -176,11 +178,11 @@ def getCreditCard():
     if not customerId:
         return "unauthorized", 401
     creditCards = db_interface.getCreditCards(customerId)
-    if creditCards:
-        return {
-            'result': True,
-            'cards': creditCards
-        }
+
+    return {
+        'result': True,
+        'cards': creditCards
+    }
 
 
 @app.route('/customer/cc/delete', methods=['POST'])  # WORKING

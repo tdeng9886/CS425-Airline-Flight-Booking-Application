@@ -232,7 +232,7 @@ def deleteCreditCard (cardId, customerId):
 
 def getCreditCards(customerId):
     c = conn.cursor()
-    c.execute("SELECT cardId, addressId, cardNumber, expiration, nameOnCard, cvcCode FROM creditCard WHERE customerId=%sl", (customerId, ))
+    c.execute("SELECT cardId, addressId, cardNumber, expiration, nameOnCard, cvcCode FROM customerCreditCards WHERE customerId=%s;", (customerId, ))
     ret = c.fetchall()
     c.close()
 

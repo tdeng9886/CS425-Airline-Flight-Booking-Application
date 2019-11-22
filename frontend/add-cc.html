@@ -17,19 +17,19 @@
 					<legend>Add New Card</legend>
 					<div class="row">
 						<label for="cardNumber">Card Number</label>
-						<input type="text" name="cardNumber-input-su"/>
+						<input type="text" id="cardNumber-input"/>
 					</div>
 					<div class="row">
 						<label for="expiration">Expriation Date</label>
-						<input type="text" name="expiration-input-su"/>
+						<input type="text" id="expiration-input"/>
 					</div>
 					<div class="row">
 						<label for="nameOnCard">Card Name</label>
-						<input type="text" name="nameOnCard-input-su"/>
+						<input type="text" id="nameOnCard-input"/>
 					</div>
 					<div class="row">
 						<label for="cvcCode">CVC Code</label>
-						<input type="number" name="cvcCode-input-su"/>
+						<input type="number" id="cvcCode-input"/>
 					</div>
 					<div class="row">
 						<label >Billing Address</label>
@@ -44,7 +44,7 @@
 			            </div>
 
 		            	<div class="crow">
-			                <button type="button" onclick="window.location ='myCreditCard.html';">Back</button>
+			                <button type="button" onclick="window.location ='cc.html';">Back</button>
 			            </div>
 		        	</div>
 
@@ -56,16 +56,16 @@
 		(async function populateAddresses() {
 			const ret = await cs425.api.get('/customer/address/list');
 			const addrSel = document.getElementById("billing-addr");
-			ret.forEach(addr =>
+			ret.addresses.forEach(addr =>
 				addrSel.innerHTML += `<option value="${addr.addressId}">${addr.line1 + ' ' + addr.line2}</option>`);
 		})();
 
 		async function save() {
-			const cardNumberBox = document.getElementById("cardNumber-input-su");
-			const expirationBox = document.getElementById("expiration-input-su");
-			const nameOnCardBox = document.getElementById("nameOnCard-input-su");
-			const cvcCodeBox = document.getElementById("cvcCode-input-su");
-			const addressBox = document.getElementById("address-input-su");
+			const cardNumberBox = document.getElementById("cardNumber-input");
+			const expirationBox = document.getElementById("expiration-input");
+			const nameOnCardBox = document.getElementById("nameOnCard-input");
+			const cvcCodeBox = document.getElementById("cvcCode-input");
+			const addressBox = document.getElementById("billing-addr");
 
 			function reset(df) {
 				df = df || { c: true, e: true, n: true, cvc: true };
@@ -76,7 +76,7 @@
 			}
 
 			try {
-				const resp = await cs425.api.post("/cc/add", {
+				const resp = await cs425.api.post("/customer/cc/add", {
 					cardNumber: cardNumberBox.value,
 					expiration: expirationBox.value,
 					nameOnCard: nameOnCardBox.value,
