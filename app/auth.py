@@ -38,8 +38,9 @@ def loginUser(email, password):
 
 def authUser(headers):
     try:
-        # authToken = headers.get('Authentication').split(' ')[1]
-        authToken = headers.get('Authentication')
+        # comes in form `Authorization: Bearer 4u3ur34hf4n3hf4mqru8fj3rfh4397479t`
+        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+        authToken = headers.get('Authentication').split(' ')[1]
         c = db_interface.conn.cursor()
         c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken,))
         id = c.fetchone()
