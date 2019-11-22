@@ -48,11 +48,14 @@
 				let addresses = {};
 
 				async function loadAddresses() {
-					const ret = await cs425.api.get('/customer/address/list');
-					const addrSel = document.getElementById("billing-addr");
-					ret.forEach(addr =>
-						addresses[addr.addressId] = addr.line1 + ' ' + addr.line2);
-
+					try {
+						const ret = await cs425.api.get('/customer/address/list');
+						const addrSel = document.getElementById("billing-addr");
+						ret.forEach(addr =>
+							addresses[addr.addressId] = addr.line1 + ' ' + addr.line2);
+					} catch (e) {
+						console.error(e);
+					}
 				}
 
 				(async function populateTable(){
@@ -64,14 +67,8 @@
 						console.error(e);
 					}
 
-					    ret = list(map(lambda t: {
-					        "cardId" : t[0],
-					        'addressId' : t[1],
-					        'cardNumber' : t[2],
-					        'expiration' : t[3],
-					        'nameOnCard' : t[4],
-					        'cvcCode' : t[5],
-					    }, ret))
+					await loadAddresses();
+
 					const t = document.getElementById('manage-info');
 					resp.cards.forEach(cc =>
 						t.innerHTML += `<tr>
@@ -80,6 +77,7 @@
 							<td>${cc.nameOnCard}</td>
 							<td>${cc.cvcCode}</td>
 							<td>${addresses[cc.addressId] || cc.addressId }</td>
+							<td><button onclick="delete(${cc.cardId})">Delete</button></td>
 						</tr>`
 					);
 				})();
