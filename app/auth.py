@@ -26,6 +26,7 @@ def checkUserCreds(email, password):
     c.close()
     return r[0] if hashPassword(r[0], password) == r[1] else False
 
+
 def loginUser(email, password):
     customerId = checkUserCreds(email, password)
     if (not customerId):
@@ -36,13 +37,14 @@ def loginUser(email, password):
     c.close()
     return token
 
+
 def authUser(headers):
     try:
         # comes in form `Authorization: Bearer 4u3ur34hf4n3hf4mqru8fj3rfh4397479t`
         # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
-        authToken = headers.get('Authentication').split(' ')[1]
+        authToken = headers.get('Authorization').split(' ')[1]
         c = db_interface.conn.cursor()
-        c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken,))
+        c.execute('SELECT customerId FROM customers WHERE authToken= %s ', (authToken, ))
         id = c.fetchone()
         c.close()
         id = id[0]

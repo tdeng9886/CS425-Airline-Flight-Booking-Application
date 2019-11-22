@@ -29,7 +29,7 @@ const cs425 = {
                     headers: {
                       'Accept': 'application/json',
                       'Content-Type': 'application/json',
-                      'Authentication': `Bearer ${ cs425.getCookie( 'authToken' ) }`,
+                      'Authorization': `Bearer ${ cs425.getCookie( 'authToken' ) }`,
                     },
                     body: JSON.stringify(body)
                 });
@@ -48,7 +48,7 @@ const cs425 = {
                     headers: {
                       'Accept': 'application/json',
                       'Content-Type': 'application/json',
-                      'Authentication': `Bearer ${cs425.getCookie('authToken')}`,
+                      'Authorization': `Bearer ${cs425.getCookie('authToken')}`,
                     },
                 });
                 return await resp.json();
@@ -65,5 +65,5 @@ const cs425 = {
     let token;
     if (!(token = cs425.getCookie('authToken')))
         window.location = 'login.html';
-        
+
 })();
