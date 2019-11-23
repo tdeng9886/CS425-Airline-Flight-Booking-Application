@@ -73,6 +73,13 @@
                 }
                 document.getElementById('bind-customer-name').innerHTML = ", " + customer.name;
             }
+
+            async function search(){
+                const from = document.getElementById("from-airport").value.toUpperCase();
+                const to = document.getElementById("to-airport").value.toUpperCase();
+                const date = encodeURIComponent(document.getElementById("flight-date").value);
+                window.location = `route.html?depart=${from}&arrive=${arrive}&transfers=2&wait=0&date=${date}`;
+            }
         </script>
     </head><body onload="onload()">
         <!-- nav bar -->
@@ -106,9 +113,12 @@
                 <div>
                 <center>
                     <h1>Arrive <i class="fas fa-plane-arrival"></i></h1>
-                    <input type="text" placeholder="Airport" id="from-airport" />
+                    <input type="text" placeholder="Airport" id="to-airport" />
                 </center></div>
             </div>
+        </div>
+        <div class="row">
+            <button style="width:100%" onclick="search()">GO</button>
         </div>
         <div class="row" id='manage-info'>
             <div class="col-sm-12 col-md-6 col-lg-6" onclick="window.location.href ='cc.html';">

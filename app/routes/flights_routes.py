@@ -3,6 +3,8 @@ from app.flightBookerDB import db_interface
 from flask import request
 from datetime import datetime, timedelta
 from app.auth import authUser
+from dateutil.parser import parse as parse_date
+
 
 # we could require authentication for these... but that just makes debugging harder
 
@@ -72,7 +74,8 @@ def routeFlight():
     tokens = data['tokens']  # Maximum number of transfers
     waitTime = data['waitTime']  # Maximum number of days between flights
 
-    departTime = datetime.strptime(data['departTime'], "%Y-%m-%d %H:%M:%S")
+
+    departTime = parse_date(data['departTime']);
 
     routes = routeFlight_rec(
         departAirportId, departTime, arriveAirportId, tokens, waitTime
