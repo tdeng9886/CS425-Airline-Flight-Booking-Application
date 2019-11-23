@@ -71,9 +71,8 @@ def routeFlight():
     data = request.json
     departAirportId = data['departAirportId']  # Departing airport
     arriveAirportId = data['arriveAirportId']  # Target airport
-    tokens = data['tokens']  # Maximum number of transfers
-    waitTime = data['waitTime']  # Maximum number of days between flights
-
+    tokens = int(data['tokens'])  # Maximum number of transfers
+    waitTime = float(data['waitTime'])  # Maximum number of days between flights
 
     departTime = parse_date(data['departTime']);
 
