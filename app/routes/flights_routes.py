@@ -149,6 +149,17 @@ def describeFlight(flightId):
     c = db_interface.conn.cursor()
     c.execute("SELECT airlineId, departAirportId, arriveAirportId, flightNumber, departTime, arriveTime, economySeats, firstClassSeats FROM flights WHERE flightId=%s", (flightId, ))
     r = c.fetchone()
+
+    c.execute("SELECT economyPrice, firstClassPrice FROM prices WHERE flightId=%s \
+    ORDER BY ABS(DATE(NOW()) - DATE(ts)) ASC;", (flightId,))
+    p = c.fetchone();
+
+    c.execute("SELECT name FROM airlines WHERE airlineId=%s", (r[0], ))
+    alName = c.fetchone();
+
+    c.execute("SELECT airportId, name FROM airports WHERE airportId = %s OR airportId = %s;", (r[1], r[2]));
+    apName = c.fetchall()
+
     c.close()
 
     if not r:
@@ -156,11 +167,16 @@ def describeFlight(flightId):
 
     return {
         'airline' : r[0],
+        'airlineName' : alName[0],
         'departAirport' : r[1],
+        'departAirportName' : apName[0][1],
         'arriveAirport' : r[2],
+        'arriveAirportName' : apName[1][1],
         'flightNumber' : r[3],
         'departTime' : r[4],
         'arriveTime' : r[5],
         'economySeats' : r[6],
         'firstClassSeats' : r[7],
+        'economyPrice' : c[0],
+        'firstClassPrice' : c[1],
     }, 200

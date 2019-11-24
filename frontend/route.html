@@ -112,12 +112,12 @@
 			</tr>`;
 
 			flights.forEach(r => {
-				const fids = JSON.stringify(r.route.map(f => f[0]));
+				const rs = encodeURIComponent(JSON.stringify(r.route.map(f => f[0])));
 				t.innerHTML += `<tr>
 					<td>${timeString(r.routeData.routeTime)}</td>
 					<td>${priceString(r.routeData)}</td>
 					<td>${routeString(r.route)}</td>
-					<td><button onclick="book(${fids})">Book</button></td>
+					<td><button onclick="book(${rs})">Book</button></td>
 				</tr>`;
 			});
 		}
@@ -149,8 +149,8 @@
 			populateList(routes);
 		})();
 
-		async function book(flightIds) {
-			window.location = `book.html?fights=${flightIds.join(',')}`;
+		async function book(route) {
+			window.location = `book.html?route=${route}`;
 		}
 	</script>
 </body>

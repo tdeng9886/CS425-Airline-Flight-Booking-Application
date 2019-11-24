@@ -76,7 +76,7 @@ def deleteCustomerAddress(addressId, customerId):
 
 def createBooking(bookingId, customerId, flightId, routeClass):
     c = conn.cursor()
-    c.execute("INSERT INTO bookings VALUES (%s,%s,%s,%s)", (
+    c.execute("INSERT INTO bookings (bookingId, customerId, flightId, routeClass) VALUES (%s,%s,%s,%s)", (
             bookingId,
             customerId,
             flightId,
