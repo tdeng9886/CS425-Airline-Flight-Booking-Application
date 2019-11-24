@@ -6,7 +6,7 @@
 		<link rel="stylesheet" href="main.css" />
         <link rel="stylesheet" href="fa/css/all.min.css" />
         <script src="main.js"> </script>
-        <script src="dl_pollyfill"></script>
+        <script src="dl_polyfill.js"></script>
 
         <style>
                 div {
@@ -126,13 +126,8 @@
             <button style="width:100%" onclick="search()"><h1>GO</h1></button>
         </div>
         <div class="row" id='manage-info'>
-            <div class="col-sm-12 col-md-6 col-lg-6" onclick="window.location.href ='cc.html';">
-                <button style="width:100%"><h1>Manage Credit Cards</h1></button>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6" onclick="window.location = 'address.html';">
-                <button style="width:100%"><h1>Manage Addresses</h1></button>
-            </div>
-
+                <button style="width:100%" onclick="window.location = 'address.html';"><h1>Manage Addresses</h1></button>
+                <button style="width:100%" onclick="window.location = 'cc.html';"><h1>Manage Credit Cards</h1></button>
         </div>
         <div class="row" id="myflights">
             <h1>Your Flights</h1>
@@ -180,8 +175,8 @@
 
 
             (async function getAirports(){
-                const apts = await cs425.get("/flights/airports");
-                const dl = document.getElementById();
+                const apts = await cs425.api.get("/airports");
+                const dl = document.getElementById("airports-list");
                 apts.airports.forEach(a =>
                     dl.innerHTML += `<option value="${a.airportId}">${a.name}</option>`);
                 dl_polyfill();

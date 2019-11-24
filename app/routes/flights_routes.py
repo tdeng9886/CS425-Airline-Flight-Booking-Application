@@ -8,7 +8,7 @@ from dateutil.parser import parse as parse_date
 
 # we could require authentication for these... but that just makes debugging harder
 
-@app.route('/flights/airports', methods=['POST'])  # Working
+@app.route('/airports', methods=['GET'])  # Working
 def getAirports():
     return {
         "airports": db_interface.getAirports()
