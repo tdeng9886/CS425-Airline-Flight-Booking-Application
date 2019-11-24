@@ -65,7 +65,7 @@
 		</fieldset>
 		</div>
 
-		<button type="button" style="width:100%"><h1>Book</h1></button>
+		<button onclick="book()" type="button" style="width:100%"><h1>Book</h1></button>
 
 	</fieldset>
 </div>
@@ -137,7 +137,7 @@
 
 			console.log(await cs425.api.post("/bookings/add", body));
 			console.log(classes);
-
+			window.location = "index.html";
 		}
 
 	</script>
