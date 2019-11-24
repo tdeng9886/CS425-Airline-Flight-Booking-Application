@@ -159,7 +159,8 @@ def describeFlight(flightId):
 
     c.execute("SELECT airportId, name FROM airports WHERE airportId = %s OR airportId = %s;", (r[1], r[2]));
     apName = c.fetchall()
-
+    if len(apName) == 1:
+        apName.append(apName[0])
     c.close()
 
     if not r:
