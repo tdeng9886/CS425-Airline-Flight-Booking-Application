@@ -35,7 +35,7 @@
 							<h2>Ticket</h2>
 						</div>
 						<div class="col-sm-12 col-md-6 col-lg-6">
-							<select id="sort-type-dd">
+							<select id="sort-type-dd" onchange="populateList()">
 								<option value="ecoSortedFlights">Economy Price</option>
 								<option value="firstSortedFlights">First Class Price</option>
 								<option value="speedSortedFlights">Speed Sorted Flights</option>
@@ -72,18 +72,18 @@
 			if (!rdata) rdata = routes;
 			const sort = document.getElementById("sort-type-dd").value;
 			const flights = rdata[sort];
-			const t = docuemnt.getElementById("flights-table");
+			const t = document.getElementById("flights-table");
 
 
 			function timeString(seconds) {
 				const hours = Math.floor(seconds / (60 * 60));
 				const mins = Math.floor((seconds - (hours * 60 * 60)) / 60);
-				return `${hours}:${seconds}`;
+				return `${hours}:${mins}`;
 			}
 
 			function priceString(r) {
-				const eco = r.routeEcoCost;
-				const first = r.routeFirstCost;
+				const eco = r.routeEcoCost.toFixed(2);
+				const first = r.routeFirstCost.toFixed(2);
 				return `$${eco}, $${first}`;
 			}
 
@@ -138,13 +138,14 @@
 			const departAirportId = findGetParameter("depart");
 			const arriveAirportId = findGetParameter("arrive");
 			const tokens = findGetParameter("transfers") || 2;
-			const waitTime = findGetParameter("wait") || 0;
+			const waitTime = findGetParameter("wait") || 0.5;
 			const departTime = findGetParameter("date") || (new Date()).toString();
+			console.log("making request");
 			const list = await cs425.api.post("/flights/search", {
 				departAirportId, arriveAirportId, tokens, waitTime, departTime, });
-
+			console.log("made request", list);
 			routes = list;
-
+			populateList(routes);
 		})();
 
 		async function book(flightIds) {
