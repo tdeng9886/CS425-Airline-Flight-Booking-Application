@@ -29,7 +29,7 @@ def scoreFlight(route=None, departTime=None):   # In any case, the funtion itsel
     for flight in route:
         ep, fp = db_interface.getFlightPrice(flight[0])[0]
         ePrice, fPrice = ePrice + float(ep), fPrice + float(fp)
-    return (flightTime, ePrice, fPrice)
+    return (flightTime, ePrice, fPrice) # this would not work as an endpoint as it interprets the tuple as http status values
 
 """
 Inputs:
@@ -141,3 +141,26 @@ def routeFlight():
     outputRoutes["skylineFlights"] = skylineFlights
 
     return outputRoutes
+
+
+
+@app.route("/flights/<flightId>")
+def describeFlight(flightId):
+    c = db_interface.conn.cursor()
+    c.execute("SELECT airlineId, departAirportId, arriveAirportId, flightNumber, departTime, arriveTime, economySeats, firstClassSeats FROM flights WHERE flightId=%s", (flightId, ))
+    r = c.fetchone()
+    c.close()
+
+    if not r:
+        return 'not found', 404
+
+    return {
+        'airline' : r[0],
+        'departAirport' : r[1],
+        'arriveAirport' : r[2],
+        'flightNumber' : r[3],
+        'departTime' : r[4],
+        'arriveTime' : r[5],
+        'economySeats' : r[6],
+        'firstClassSeats' : r[7],
+    }, 200

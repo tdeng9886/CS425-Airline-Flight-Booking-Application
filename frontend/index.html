@@ -78,7 +78,7 @@
                 const from = document.getElementById("from-airport").value.toUpperCase();
                 const to = document.getElementById("to-airport").value.toUpperCase();
                 const date = encodeURIComponent(document.getElementById("flight-date").value);
-                window.location = `route.html?depart=${from}&arrive=${to}&transfers=2&wait=0&date=${date}`;
+                window.location = `route.html?depart=${from}&arrive=${to}&transfers=2&wait=0.5&date=${date}`;
             }
         </script>
     </head><body onload="onload()">

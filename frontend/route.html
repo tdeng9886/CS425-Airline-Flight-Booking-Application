@@ -70,6 +70,7 @@
 
 		function populateList(rdata) {
 			if (!rdata) rdata = routes;
+			if (!rdata) return;
 			const sort = document.getElementById("sort-type-dd").value;
 			const flights = rdata[sort];
 			const t = document.getElementById("flights-table");
