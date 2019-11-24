@@ -212,5 +212,7 @@ def customerFlightsList():
     c = db_interface.conn.cursor()
     c.execute("SELECT flightId, routeClass FROM bookingFlights WHERE bookingId IN (SELECT bookingId FROM BOOKINGS WHERE customerId = %s)", (customerId, ))
     ret = c.fetchall()
+    print(ret, flush=True)
     c.close()
-    return ret
+
+    return { "flights" : ret } , 200

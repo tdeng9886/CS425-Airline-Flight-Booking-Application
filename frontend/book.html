@@ -127,15 +127,15 @@
 			const classes = Array.from(document.getElementsByClassName("routeclass-dd")).map(c => c.value);
 			const route = JSON.parse(findGetParameter("route"));
 			const fids = route.map(f => f[0]);
-			const addr = document.getElementById("billing-addr").value;
+			const address = document.getElementById("billing-addr").value;
 			const cc = document.getElementById("billing-cc").value;
 
 			const body = {
-				cc, addr, route, routeClass: classes
+				cc, address, route, routeClass: classes
 			};
 			console.log({body});
 
-			console.log(await cs425.api.post("/booking/add", body));
+			console.log(await cs425.api.post("/bookings/add", body));
 			console.log(classes);
 
 		}
