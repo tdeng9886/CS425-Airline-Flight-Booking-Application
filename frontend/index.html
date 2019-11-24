@@ -145,6 +145,27 @@
 
         <script>
 
+            (async function myFlights(){
+                const flights = await cs425.api.get("/customer/flights/list");
+                const fds = await Promise.all(flights.map(f => cs425.api.get('/flights/' + f[0])));
+                const ft = document.getElementById("booked-flights");
+
+
+
+
+                for (let i = 0; i < flights.length; i++) {
+                    const f = fds[i];
+                    ft.innerHTML += `<tr>
+                        <td>${f.airlineName} flight ${f.airline}-${f.flightNumber}</td>
+                        <td>${f.departAirportName} to ${f.arriveAirportName}</td>
+                        <td>${f.arriveTime} - ${f.departTime}</td>
+                        <td>$${f.economyPrice.toFixed(2)} Economy, $${f.firstClassPrice.toFixed(2)} 1<sup>st</sup> Class</td>
+                        <td>${flights[i][1]}</td>
+                    </tr>`;
+                }
+
+            })();
+
 
 
         </script>
