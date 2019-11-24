@@ -4,35 +4,7 @@ from app.routes import flights_routes
 from flask import request
 from app.auth import authUser
 
-''' Input JSON:
-{
-	 "route": [
-        [
-          578024,
-          "7F",
-          "07A",
-          "04A",
-          50,
-          "Sun, 29 Dec 2019 19:45:00 GMT",
-          "Mon, 30 Dec 2019 12:15:00 GMT",
-          240,
-          15
-        ],
-        [
-          306388,
-          "3U",
-          "04A",
-          "1N7",
-          47,
-          "Mon, 30 Dec 2019 13:45:00 GMT",
-          "Mon, 30 Dec 2019 21:45:00 GMT",
-          120,
-          20
-        ]
-	 ],
-	"routeClass": "economy"
-}
-'''
+
 @app.route('/bookings/add', methods=['POST'])  # WORKING
 def createBooking():
     customerId = authUser(request.headers)
