@@ -131,7 +131,12 @@
 		})();
 
 		async function book() {
-			const classes = document.getElementsByClassName("routeclass-dd").map(c => c.value);
+			const classes = Array.from(document.getElementsByClassName("routeclass-dd")).map(c => c.value);
+			const route = JSON.parse(findGetParameter("route"));
+			const fids = route.map(f => f[0]);
+
+
+			await cs425.api.post("/booking/add")
 			console.log(classes);
 		}
 

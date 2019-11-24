@@ -41,23 +41,22 @@ def createBooking():
 
     data = request.json
     route = data['route']
-	routeClass = data['routeClass']
-	route = list(zip(route, routeClass))
-	cc = data['cc']
-	address = data['address']
+    routeClass = data['routeClass']
+    route = list(zip(route, routeClass))
+    cc = data['cc']
+    address = data['address']
     bookingId = db_interface.getLastBookingNumber() + 1
 
-	c = db_interface.conn.cursor()
-	c.execute("""INSERT INTO bookings
-		(bookingId, customerId, customerCreditCard, customerAddress)
-	VALUES (%s, %s, %s, %s);""", (bookingId, customerId, cc, address))
+    c = db_interface.conn.cursor()
+    c.execute("""INSERT INTO bookings
+        (bookingId, customerId, customerCreditCard, customerAddress)
+    VALUES (%s, %s, %s, %s);""", (bookingId, customerId, cc, address))
 
     for flight in route:
-		f, class = flight
-		c.execute("INSERT INTO bookingFlights (bookingId, flightId, routeClass) VALUES (%s, %s, %s);", (bookingId, f[0], c))
-        db_interface.createBooking(bookingId, customerId, f[0], c)
+        f, cls = flight
+        c.execute("INSERT INTO bookingFlights (bookingId, flightId, routeClass) VALUES (%s, %s, %s);", (bookingId, f[0], cls))
 
-	c.close()
+    c.close()
 
     return {
         'message': 'New bookings has been added.'
