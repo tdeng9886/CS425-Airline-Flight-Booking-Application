@@ -130,23 +130,31 @@
             </div>
 
         </div>
-        <div class="row" id=flights>
+        <div class="row" id="myflights">
             <h1>Your Flights</h1>
-            <table id="booked-flights">
-    			<tr>
-        			<th>Flight</th>
-        			<th>Route</th>
-        			<th>Time</th>
-        			<th>Price</th>
-        			<th>Class</th>
-    			</tr>
-    		</table>
+            <div class="row">
+                <table id="booked-flights">
+        			<tr>
+            			<th>Flight</th>
+            			<th>Route</th>
+            			<th>Time</th>
+            			<th>Price</th>
+            			<th>Class</th>
+        			</tr>
+        		</table>
+            </div>
         </div>
 
         <script>
 
             (async function myFlights(){
                 const flights = await cs425.api.get("/customer/flights/list");
+
+                if (!flights.length) {
+                    document.getElementById("myflights").style.display = 'none';
+                    return;
+                }
+                
                 const fds = await Promise.all(flights.map(f => cs425.api.get('/flights/' + f[0])));
                 const ft = document.getElementById("booked-flights");
 
