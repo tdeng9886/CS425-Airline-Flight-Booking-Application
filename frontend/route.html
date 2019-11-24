@@ -30,50 +30,32 @@
     		</div>
     		<div>
 				<fieldset>
-					<h2>Ticket</h2>
 					<div class="row">
-						<table style="width: 100%">
+						<div class="col-sm-12 col-md-6 col-lg-6">
+							<h2>Ticket</h2>
+						</div>
+						<div class="col-sm-12 col-md-6 col-lg-6">
+							<select id="sort-type-dd">
+								<option value="ecoSortedFlights">Economy Price</option>
+								<option value="firstSortedFlights">First Class Price</option>
+								<option value="speedSortedFlights">Speed Sorted Flights</option>
+								<option value="skylineFlights">Skyline Flights</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<table style="width: 100%" id="flights-table">
 							<tr>
 	            				<th>Time</th>
 	            				<th>Price</th>
 	            				<th>Route</th>
 	            				<th>Actions</th>
 	            			</tr>
-	            			<tr>
-	            				<td>1:34</td>
-	            				<td>$300</td>
-	            				<td>ATL->SFO->MDW</td>
-	            				<td><button type="button" onclick="book()">Book</button></td>
-	            			</tr>
-	            			<tr>
-	            				<td>2:00</td>
-	            				<td>$150</td>
-	            				<td>ATL->NIA->MDW</td>
-	            				<td><button type="button" onclick="book()">Book</button></td>
-	            			</tr>
-	            			<tr>
-	            				<td>1:25</td>
-	            				<td>$205</td>
-	            				<td>ATL->SMH->MDW</td>
-	            				<td><button type="button" onclick="book()">Book</button></td>
-	            			</tr>
-	            			<tr>
-	            				<td>3:45</td>
-	            				<td>$425</td>
-	            				<td>ATL->ORD->MDW</td>
-	            				<td><button type="button" onclick="book()">Book</button></td>
-	            			</tr>
-	            			<tr>
-	            				<td>1:25</td>
-	            				<td>$205</td>
-	            				<td>ATL->SMH->MDW</td>
-	            				<td><button type="button" onclick="book()">Book</button></td>
-	            			</tr>
-	            			<tr>
-	            				<td>3:45</td>
-	            				<td>$425</td>
-	            				<td>ATL->ORD->MDW</td>
-	            				<td><button type="button" onclick="book()">Book</button></td>
+							<tr>
+								<td>Scanning...</td>
+								<td>Scanning...</td>
+								<td>Scanning...</td>
+								<td>Scanning...</td>
 							</tr>
 						</table>
 					</div>
@@ -82,7 +64,66 @@
 		</fieldset>
 	</div>
 	<script>
-		(async function populate(){
+
+
+		let routes;
+
+		function populateList(rdata) {
+			if (!rdata) rdata = routes;
+			const sort = document.getElementById("sort-type-dd").value;
+			const flights = rdata[sort];
+			const t = docuemnt.getElementById("flights-table");
+
+
+			function timeString(seconds) {
+				const hours = Math.floor(seconds / (60 * 60));
+				const mins = Math.floor((seconds - (hours * 60 * 60)) / 60);
+				return `${hours}:${seconds}`;
+			}
+
+			function priceString(r) {
+				const eco = r.routeEcoCost;
+				const first = r.routeFirstCost;
+				return `$${eco}, $${first}`;
+			}
+
+			function routeString(route) {
+				let apStr = "";
+				let cStr = "";
+				let prevAp = null;
+				for (f of route) {
+					apStr += f[2] + '->';
+					if (prevAp)
+						cStr += '->';
+					cStr += f[1];
+					prevAp = f[3];
+				}
+				if (prevAp)
+					apStr += prevAp;
+				return `${apStr}<br/>${cStr}`;
+			}
+
+			t.innerHTML = `<tr>
+				<th>Time</th>
+				<th>Price</th>
+				<th>Route</th>
+				<th>Actions</th>
+			</tr>`;
+
+			flights.forEach(r => {
+				const fids = JSON.stringify(r.route.map(f => f[0]));
+				t.innerHTML += `<tr>
+					<td>${timeString(r.routeData.routeTime)}</td>
+					<td>${priceString(r.routeData)}</td>
+					<td>${routeString(r.route)}</td>
+					<td><button onclick="book(${fids})">Book</button></td>
+				</tr>`;
+			});
+		}
+
+
+
+		(async function downloadData(){
 
 			function findGetParameter(parameterName) {
 				let result = null, tmp = [];
@@ -102,14 +143,12 @@
 			const list = await cs425.api.post("/flights/search", {
 				departAirportId, arriveAirportId, tokens, waitTime, departTime, });
 
-			console.log(list);
+			routes = list;
 
-
-
-			
 		})();
 
-		async function book() {
+		async function book(flightIds) {
+			window.location = `book.html?fights=${flightIds.join(',')}`;
 		}
 	</script>
 </body>
