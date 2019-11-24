@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="main.css" />
         <link rel="stylesheet" href="fa/css/all.min.css" />
         <script src="main.js"> </script>
+        <script src="dl_pollyfill"></script>
 
         <style>
                 div {
@@ -81,7 +82,11 @@
                 window.location = `route.html?depart=${from}&arrive=${to}&transfers=2&wait=0.5&date=${date}`;
             }
         </script>
+
     </head><body onload="onload()">
+
+        <datalist id="airports-list"></datalist>
+
         <!-- nav bar -->
         <div class="row" id='topbar'>
             <div class="col-sm-6">
@@ -99,7 +104,7 @@
                 <div>
                 <center>
                     <h1>Depart <i class="fas fa-plane-departure"></i></h1>
-                    <input type="text" placeholder="Airport" id="from-airport" />
+                    <input list="airports-list" id="from-airport" placeholder="Airport" />
                 </center></div>
             </div>
             <div class="col-sm-12 col-md-4 col-lg-4">
@@ -113,18 +118,17 @@
                 <div>
                 <center>
                     <h1>Arrive <i class="fas fa-plane-arrival"></i></h1>
-                    <input type="text" placeholder="Airport" id="to-airport" />
+                    <input list="airports-list" id="to-airport" placeholder="Airport" />
                 </center></div>
             </div>
         </div>
         <div class="row">
-            <button style="width:100%" onclick="search()">GO</button>
+            <button style="width:100%" onclick="search()"><h1>GO</h1></button>
         </div>
         <div class="row" id='manage-info'>
             <div class="col-sm-12 col-md-6 col-lg-6" onclick="window.location.href ='cc.html';">
                 <button style="width:100%"><h1>Manage Credit Cards</h1></button>
             </div>
-
             <div class="col-sm-12 col-md-6 col-lg-6" onclick="window.location = 'address.html';">
                 <button style="width:100%"><h1>Manage Addresses</h1></button>
             </div>
@@ -133,7 +137,7 @@
         <div class="row" id="myflights">
             <h1>Your Flights</h1>
             <div class="row">
-                <table id="booked-flights">
+                <table id="booked-flights" style="width:99%;">
         			<tr>
             			<th>Flight</th>
             			<th>Route</th>
@@ -154,7 +158,7 @@
                     document.getElementById("myflights").style.display = 'none';
                     return;
                 }
-                
+
                 const fds = await Promise.all(flights.map(f => cs425.api.get('/flights/' + f[0])));
                 const ft = document.getElementById("booked-flights");
 
@@ -175,7 +179,13 @@
             })();
 
 
-
+            (async function getAirports(){
+                const apts = await cs425.get("/flights/airports");
+                const dl = document.getElementById();
+                apts.airports.forEach(a =>
+                    dl.innerHTML += `<option value="${a.airportId}">${a.name}</option>`);
+                dl_polyfill();
+            })();
         </script>
     </body>
 </html>
