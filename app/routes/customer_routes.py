@@ -196,7 +196,21 @@ def deleteCreditCard():
     c.execute("DELETE FROM customerCreditCards WHERE cardId=%s;", ( data["cardId"], ))
     rc = c.rowcount
     c.close()
+
     if rc:
         return { 'result' : True }, 200
     else:
         return { 'result' : False }, 403
+
+
+@app.route("/customer/flights/list", methods=["GET"])
+def customerFlightsList():
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+
+    c = db_interface.conn.cursor()
+    c.execute("SELECT flightId, routeClass FROM bookingFlights WHERE bookingId IN (SELECT bookingId FROM BOOKINGS WHERE customerId = %s)", (customerId, ))
+    ret = c.fetchall()
+    c.close()
+    return ret

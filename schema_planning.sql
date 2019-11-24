@@ -64,9 +64,15 @@ CREATE TABLE prices (
 );
 
 CREATE TABLE bookings (
-	bookingId BIGINT NOT NULL,
+	bookingId BIGINT PRIMARY KEY,
 	customerId BIGINT REFERENCES customers,
+	customerCreditCard BIGINT REFERENCES customerCreditCards,
+	customerAddress BIGINT REFERENCES customerAddresses
+);
+
+CREATE TABLE bookingFlights (
+	bookingId BIGINT REFERENCES bookings,
 	flightId BIGINT REFERENCES flights,
 	routeClass VARCHAR(7) CHECK (routeClass IN ('first', 'economy')),
-	PRIMARY KEY(bookingId, flightId, customerId)
+	PRIMARY KEY(bookingId, flightId)
 );

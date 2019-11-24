@@ -98,6 +98,8 @@ def deleteBooking(bookingId, customerId):
     c = conn.cursor()
     c.execute("DELETE FROM bookings WHERE bookingId = %s AND customerId = %s", (bookingId, customerId))
     rows_deleted = c.rowcount
+    c.execute("DELETE FROM flightBookings WHERE bookingId = %s", (bookingId,))
+    rows_deleted += c.rowcount
     c.close()
     return bool(rows_deleted)
 

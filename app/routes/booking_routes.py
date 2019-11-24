@@ -38,15 +38,31 @@ def createBooking():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
+
     data = request.json
     route = data['route']
-    routeClass = data['routeClass']
+	routeClass = data['routeClass']
+	route = list(zip(route, routeClass))
+	cc = data['cc']
+	address = data['address']
     bookingId = db_interface.getLastBookingNumber() + 1
+
+	c = db_interface.conn.cursor()
+	c.execute("""INSERT INTO bookings
+		(bookingId, customerId, customerCreditCard, customerAddress)
+	VALUES (%s, %s, %s, %s);""", (bookingId, customerId, cc, address))
+
     for flight in route:
-        db_interface.createBooking(bookingId, customerId, flight[0], routeClass)
+		f, class = flight
+		c.execute("INSERT INTO bookingFlights (bookingId, flightId, routeClass) VALUES (%s, %s, %s);", (bookingId, f[0], c))
+        db_interface.createBooking(bookingId, customerId, f[0], c)
+
+	c.close()
+
     return {
         'message': 'New bookings has been added.'
     }, 200
+
 
 '''
 Only argument is Authentication token in header.
@@ -92,6 +108,7 @@ def getBooking():
     return {
         "message": "No bookings found."
     }, 400
+
 
 @app.route('/bookings/delete', methods=['POST'])  # WORKING
 def deleteBooking():
