@@ -4,7 +4,7 @@
 	<title>BookingPage</title>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
 		<link rel="stylesheet" href="main.css" />
-		<script src="sha.js"> </script>
+		<script src="main.js"> </script>
 		<style>
 				#user_name {
                     text-align: right;
@@ -81,6 +81,7 @@
 		// load cc dropdown
 		(async function populateCC() {
 			const ccs = await cs425.api.get('/customer/cc/list');
+			console.log({ccs});
 			const ccSel = document.getElementById("billing-cc");
 			ccs.cards.forEach(cc =>
 				ccSel.innerHTML += `<option value="${cc.cardId}">${cc.expiration + ': ' + cc.cardNumber}</option>`)
@@ -89,6 +90,7 @@
 		// load address dropdown
 		(async function populateAddresses() {
 			const ret = await cs425.api.get('/customer/address/list');
+			console.log({addresses: ret})
 			const addrSel = document.getElementById("billing-addr");
 			ret.addresses.forEach(addr =>
 				addrSel.innerHTML += `<option value="${addr.addressId}">${addr.line1 + ' ' + addr.line2}</option>`);
@@ -113,11 +115,11 @@
 			const fids = route.map(f => f[0]);
 			let flights = fids.map(fid => cs425.api.get('/flights/' + fid));
 			flights = await Promise.all(flights).catch(console.error);
-
+			console.log({flights});
 			const t = document.getElementById("flights-ticket");
 			flights.forEach(f =>
 				t.innerHTML += `<tr>
-					<td>${f.airlineName} flight ${airline}-${f.flightNumber}</td>
+					<td>${f.airlineName} flight ${f.airline}-${f.flightNumber}</td>
 					<td>${f.departAirportName} to ${f.arriveAirportName}</td>
 					<td>${f.arriveTime}  - ${f.departTime}</td>
 					<td>$${f.economyPrice.toFixed(2)} Economy, $${f.firstClassPrice.toFixed(2)} 1<sup>st</sup> Class</td>

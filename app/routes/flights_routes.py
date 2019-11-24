@@ -177,6 +177,6 @@ def describeFlight(flightId):
         'arriveTime' : r[5],
         'economySeats' : r[6],
         'firstClassSeats' : r[7],
-        'economyPrice' : c[0],
-        'firstClassPrice' : c[1],
+        'economyPrice' : float(p[0]),
+        'firstClassPrice' : float(p[1]),
     }, 200

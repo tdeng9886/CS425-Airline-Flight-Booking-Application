@@ -112,12 +112,12 @@
 			</tr>`;
 
 			flights.forEach(r => {
-				const rs = encodeURIComponent(JSON.stringify(r.route.map(f => f[0])));
+				const rs = encodeURIComponent(JSON.stringify(r.route));
 				t.innerHTML += `<tr>
 					<td>${timeString(r.routeData.routeTime)}</td>
 					<td>${priceString(r.routeData)}</td>
 					<td>${routeString(r.route)}</td>
-					<td><button onclick="book(${rs})">Book</button></td>
+					<td><button onclick="book('${rs}')">Book</button></td>
 				</tr>`;
 			});
 		}
