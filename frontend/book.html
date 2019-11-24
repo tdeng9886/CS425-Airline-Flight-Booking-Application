@@ -15,61 +15,60 @@
 
 </head>
 <body>
-	<div>
-		<h2>Booking Page</h2>
-			<fieldset>
-				<div class="row">
-        			<div class="col-sm-12 col-md-6 col-lg-6">
-            			<h1><button type="button" onclick="window.location.href ='index.html';">Home</button></h1>
-        			</div>
+<div>
+	<h2>Booking Page</h2>
+	<fieldset>
+		<div class="row">
+			<div class="col-sm-12 col-md-6 col-lg-6">
+				<h1><button type="button" onclick="window.location.href ='index.html';">Home</button></h1>
+			</div>
 
+			<div class="col-sm-12 col-md-6 col-lg-6" id="user_name">
+				<h2>Name<h2>
+			</div>
 
-        			<div class="col-sm-12 col-md-6 col-lg-6" id="user_name">
-            			<h2>Name<h2>
-        			</div>
+		</div>
+		<div>
+		<fieldset>
+		<h2>Ticket</h2>
+		<div class="row">
+		<table id="flights-ticket">
+		<tr>
+		<th>Flight</th>
+		<th>Route</th>
+		<th>Time</th>
+		<th>Price</th>
+		<th>Class</th>
+		</tr>
+		</table>
 
-        		</div>
-        		<div>
-    				<fieldset>
-    					<h2>Ticket</h2>
-    					<div class="row">
-							<table id="flights-ticket">
-								<tr>
-									<th>Flight</th>
-									<th>Route</th>
-									<th>Time</th>
-									<th>Price</th>
-									<th>Class</th>
-								</tr>
-							</table>
+		</div>
+		<h2>Payment</h2>
+		<div class="row" id="payment">
 
-    					</div>
-    					<h2>Payment</h2>
-    					<div class="row" id="payment">
+		<div class="row">
+		<div class="col-sm-12 col-md-6 col-lg-6">
+		<h2>Billing Address:</h2>
+		</div>
+		<div class="col-sm-12 col-md-6 col-lg-6">
+		<select id="billing-addr"></select>
+		</div>
+		</div><hr/>
 
-						<div class="row">
-			      			        <div class="col-sm-12 col-md-6 col-lg-6">
-								<h2>Billing Address:</h2>
-							</div>
-							<div class="col-sm-12 col-md-6 col-lg-6">
-								<select id="billing-addr"></select>
-							</div>
-						</div><hr/>
+		<div class="row">
+		<div class="col-sm-12 col-md-6 col-lg-6"><h2>Payment Card:</h2></div>
+		<div class="col-sm-12 col-md-6 col-lg-6">
+		<select id="billing-cc"></select>
+		</div>
+		</div>
+		</div>
+		</fieldset>
+		</div>
 
-        					<div class="row">
-							<div class="col-sm-12 col-md-6 col-lg-6"><h2>Payment Card:</h2></div>
-							<div class="col-sm-12 col-md-6 col-lg-6">
-								<select id="billing-cc"></select>
-							</div>
-						</div>
-	        			</div>
-    				</fieldset>
-        		    </div>
+		<button type="button" style="width:100%"><h1>Book</h1></button>
 
-                            <button type="button" style="width:100%"><h1>Book</h1></button>
-
-			</fieldset>
-	</div>
+	</fieldset>
+</div>
 
 	<script>
 		// load cc dropdown
