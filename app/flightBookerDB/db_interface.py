@@ -198,7 +198,7 @@ def addPrice(flightId, economyPrice, firstClassPrice, ts):
  # Add a new credit card
 def addCreditCard(cardId, customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode):
     c = conn.cursor()
-    c.execute ("INSERT INTO customerCreditCards VALUES (%s, %s, %s, %s, %s, %s, %s)",(
+    c.execute ("INSERT INTO customerCreditCards (cardId, customerId, addressId, cardNumber, expiration, nameOnCard, cvcCode) VALUES (%s, %s, %s, %s, %s, %s, %s)",(
         cardId,
         customerId,
         addressId,

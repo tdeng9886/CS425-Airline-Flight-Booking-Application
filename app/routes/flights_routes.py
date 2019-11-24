@@ -115,8 +115,29 @@ def routeFlight():
     for price in sorted(routeFirstPrice.keys()):
         firstSortedFlights.append(routeFirstPrice[price])
 
+    # 4.3.1 - Skyline Query
+    skylineFlights = []
+    for testFlight in ecoSortedFlights:
+        testPrice = testFlight['routeData']['routeEcoCost']
+        testTime = testFlight['routeData']['routeTime']
+        skyline = True
+        for comparisonFlight in speedSortedFlights:
+            comparisonTime = comparisonFlight['routeData']['routeTime']
+            comparisonPrice = comparisonFlight['routeData']['routeTime']
+
+            if (testPrice <= comparisonPrice) and (testTime <= comparisonTime):
+                if (testPrice < comparisonPrice) or (testTime < comparisonTime):
+                    continue
+            skyline = False
+
+        if skyline:
+            skylineFlights.append(testFlight)
+
+
+
     outputRoutes["speedSortedFlights"] = speedSortedFlights
     outputRoutes["ecoSortedFlights"] = ecoSortedFlights
     outputRoutes["firstSortedFlights"] = firstSortedFlights
+    outputRoutes["skylineFlights"] = skylineFlights
 
     return outputRoutes
