@@ -148,7 +148,7 @@
         <script>
 
             (async function myFlights(){
-                const flights = await cs425.api.get("/customer/flights/list");
+                const flights = (await cs425.api.get("/customer/flights/list")).flights;
 
                 if (!flights.length) {
                     document.getElementById("myflights").style.display = 'none';
