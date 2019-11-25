@@ -107,7 +107,7 @@ def bookingInfo(bookingId):
         output['flights'].append({
             "bookingId": x[0],
             "flightId": x[1],
-            "routeClass": [2]
+            "routeClass": x[2]
         })
     c.close()
     return output
