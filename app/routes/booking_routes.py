@@ -14,71 +14,61 @@ def createBooking():
     data = request.json
     route = data['route']
     routeClass = data['routeClass']
-    route = list(zip(route, routeClass))
     cc = data['cc']
     address = data['address']
+
+    if len(routeClass) != len(route):
+        return {
+            "Error": "Bad request. Supply a class for each flight."
+        }, 400
+
+    route = list(zip(route, routeClass))
     bookingId = db_interface.getLastBookingNumber() + 1
 
-    c = db_interface.conn.cursor()
-    c.execute("""INSERT INTO bookings
-        (bookingId, customerId, customerCreditCard, customerAddress)
-    VALUES (%s, %s, %s, %s);""", (bookingId, customerId, cc, address))
-
-    for flight in route:
-        f, cls = flight
-        c.execute("INSERT INTO bookingFlights (bookingId, flightId, routeClass) VALUES (%s, %s, %s);", (bookingId, f[0], cls))
-
-    c.close()
+    db_interface.createBooking(bookingId, customerId, cc, address, route)
 
     return {
-        'message': 'New bookings has been added.'
+        'bookingId': bookingId,
+        'result': 'Success'
     }, 200
 
 
 '''
 Only argument is Authentication token in header.
 '''
-@app.route('/bookings/get', methods=['POST'])  # WORKING
-def getBooking():
-    customerId = authUser(request.headers)
+@app.route('/bookings/get', methods=['POST'])
+def getBooking(customerId=None):
     if not customerId:
-        return "unauthorized", 401
+        customerId = authUser(request.headers)
+        if not customerId:
+            return "unauthorized", 401
+
     bookings = db_interface.getBookings(customerId)
-    booking_map = {}  # Simplified - form {bookingId: [flight]}
+    output = {'bookings': []}
     for booking in bookings:
-        if booking[0] in booking_map.keys():
-            booking_map[booking[0]]['route'].append(db_interface.getFlightInfo(booking[2]))
-        else:
-            booking_map[booking[0]] = {
-                'route': [db_interface.getFlightInfo(booking[2])],
-                'class': booking[3]
-            }
-
-    bookingsReturn = {}
-
-    for booking in booking_map.keys():
-        route = booking_map[booking]['route']
-        deptFlightTime = db_interface.getFlightInfo(route[0][0])[6]
-        (flightTime, ePrice, fPrice) = flights_routes.scoreFlight(route, deptFlightTime)
-        if booking_map[booking]['class'] == 'economy':
-            price = ePrice
-        else:
-            price = fPrice
-
-        bookingsReturn[booking] = {
-            'route': route,
-            'routeData': {
-                'routeCost': price,
-                'flightTime': flightTime.total_seconds(),
-            }
-        }
-
-    if bookingsReturn:
-        return bookingsReturn
+        output['bookings'].append(booking[0])
+    if output['bookings']:
+        return output
 
     return {
         "message": "No bookings found."
     }, 400
+
+
+@app.route('/bookings/bookinginfo', methods=['POST'])
+def bookingInfo():
+    customerId = authUser(request.headers)
+    if not customerId:
+        return "unauthorized", 401
+    data = request.json
+    customerAuthBookings = getBooking(customerId)
+    booking = data['bookingId']
+    if booking not in customerAuthBookings['bookings']:
+        return "unauthorized", 401
+    bookingFlights = db_interface.bookingInfo(booking)
+    return {
+        "result": bookingFlights
+    }, 200
 
 
 @app.route('/bookings/delete', methods=['POST'])  # WORKING

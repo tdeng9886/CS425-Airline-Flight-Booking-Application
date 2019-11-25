@@ -74,25 +74,43 @@ def deleteCustomerAddress(addressId, customerId):
     return bool(rows_deleted)
 
 
-def createBooking(bookingId, customerId, flightId, routeClass):
+def createBooking(bookingId, customerId, cc, address, route):
     c = conn.cursor()
-    c.execute("INSERT INTO bookings (bookingId, customerId, flightId, routeClass) VALUES (%s,%s,%s,%s)", (
-            bookingId,
-            customerId,
-            flightId,
-            routeClass)
-    )
-    c.close()
-    return True
+    try:
+        c.execute("""INSERT INTO bookings
+            (bookingId, customerId, customerCreditCard, customerAddress)
+        VALUES (%s, %s, %s, %s);""", (bookingId, customerId, cc, address))
+        for flight in route:  # flight: (route, routeClass)
+            print(flight)
+            c.execute("INSERT INTO bookingFlights (bookingId, flightId, routeClass) VALUES (%s, %s, %s)", (bookingId, flight[0][0], flight[1]))
+        c.close()
+        return True
+
+    except Exception as E:
+        print(E)
+        return False
 
 
 def getBookings(customerId):
     c = conn.cursor()
-    c.execute("SELECT * FROM bookings WHERE customerId = %s", (customerId,))
+    c.execute("SELECT bookingId FROM bookings WHERE customerId = %s", (customerId,))
     ret = [x for x in c]
     c.close()
     return ret
 
+
+def bookingInfo(bookingId):
+    c = conn.cursor()
+    c.execute("SELECT * FROM bookingFlights WHERE bookingId = %s", (bookingId,))
+    output = {'flights': []}
+    for x in c:
+        output['flights'].append({
+            "bookingId": x[0],
+            "flightId": x[1],
+            "routeClass": [2]
+        })
+    c.close()
+    return output
 
 def deleteBooking(bookingId, customerId):
     c = conn.cursor()
