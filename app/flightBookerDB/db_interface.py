@@ -165,7 +165,19 @@ def getFlights(departAirportId, departTime, latestDepart):
         AND departTime BETWEEN %s AND %s
         ORDER BY arriveTime ASC""", (departAirportId, departTime, latestDepart))
 
-    ret = [x for x in c]
+    ret = []
+    for x in c:
+        flightId = x[0]
+        flightOccupancy = getFlightOccupancy(flightId)
+        flightData = list(x)
+        for row in flightOccupancy:
+            print(row)
+            if row[0] == "first":
+                flightData[8] -= row[1]
+            else:
+                flightData[7] -= row[1]
+        if (flightData[8] > 0) and (flightData[7] > 0):
+            ret.append(tuple(flightData))
     c.close()
     return ret
 
@@ -190,6 +202,20 @@ def getFlightInfo(flightId):
     FROM flights
     WHERE flightId = %s""", (flightId,))
     ret = c.fetchone()
+    c.close()
+    return ret
+
+
+def getFlightOccupancy(flightId):
+    c = conn.cursor()
+    c.execute("""
+    SELECT routeClass, count(bookingId)
+    FROM bookingFlights
+    WHERE flightId = %s
+    GROUP BY routeClass
+    ORDER BY routeClass DESC
+    """, (flightId,))
+    ret = [x for x in c]
     c.close()
     return ret
 
