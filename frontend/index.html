@@ -142,6 +142,19 @@
         			</tr>
         		</table>
             </div>
+
+            <h1>Your Bookings</h1>
+            <div class="row">
+                <table>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Flights</th>
+                        <th>Actions</th>
+                    </tr>
+                </table>
+            </div>
+
+
         </div>
 
         <script>
@@ -171,6 +184,10 @@
                     </tr>`;
                 }
 
+            })();
+
+            (async function myBookings(){
+                const bookings = (await cs425.api.get)
             })();
 
 

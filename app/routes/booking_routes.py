@@ -36,7 +36,7 @@ def createBooking():
 '''
 Only argument is Authentication token in header.
 '''
-@app.route('/bookings/get', methods=['POST'])
+@app.route('/bookings/get', methods=['GET'])
 def getBooking(customerId=None):
     if not customerId:
         customerId = authUser(request.headers)
@@ -55,19 +55,18 @@ def getBooking(customerId=None):
     }, 400
 
 
-@app.route('/bookings/bookinginfo', methods=['POST'])
+@app.route('/bookings/bookinginfo', methods=['GET'])
 def bookingInfo():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
     data = request.json
-    customerAuthBookings = getBooking(customerId)
-    booking = data['bookingId']
-    if booking not in customerAuthBookings['bookings']:
-        return "unauthorized", 401
-    bookingFlights = db_interface.bookingInfo(booking)
+    customerBookings = getBooking(customerId)
+    customerBookings = dict(zip(customerBookings,
+        map(lambda bid: db_interface.bookingInfo(bid),
+            customerBookings)))
     return {
-        "result": bookingFlights
+        "result": customerBookings
     }, 200
 
 
