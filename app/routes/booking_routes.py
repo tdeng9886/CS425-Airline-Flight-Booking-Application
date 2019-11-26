@@ -55,18 +55,26 @@ def getBooking(customerId=None):
     }, 400
 
 
-@app.route('/bookings/bookinginfo', methods=['GET'])
+@app.route('/bookings/list', methods=['GET'])
 def bookingInfo():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
     data = request.json
     customerBookings = getBooking(customerId)
-    customerBookings = dict(zip(customerBookings,
-        map(lambda bid: db_interface.bookingInfo(bid),
-            customerBookings)))
+
+    def mapFxn(bid):
+        info = db_interface.bookingInfo(bid)
+        ret = []
+        for flight in info:
+            del flight['bookingId']
+            ret.append(flight)
+        return ret
+
+    customerBookings = dict(map(lambda bid: [ bid, mapFxn ], customerBookings))
+
     return {
-        "result": customerBookings
+        "data": customerBookings
     }, 200
 
 
