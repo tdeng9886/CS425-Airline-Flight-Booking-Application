@@ -15,8 +15,7 @@ def getAirports():
     }
 
 # Taking two airportIds:
-@app.route('/flights/score', methods=['POST'])  # I don't think this should ever be used as an endpoint.
-def scoreFlight(route=None, departTime=None):   # In any case, the funtion itself works.
+def scoreFlight(route, departTime):
     # Time of Flight
     if not route:
         data = request.json
@@ -29,19 +28,9 @@ def scoreFlight(route=None, departTime=None):   # In any case, the funtion itsel
     for flight in route:
         ep, fp = db_interface.getFlightPrice(flight[0])[0]
         ePrice, fPrice = ePrice + float(ep), fPrice + float(fp)
-    return (flightTime, ePrice, fPrice) # this would not work as an endpoint as it interprets the tuple as http status values
 
-"""
-Inputs:
-{
-	"departAirportId": "07A",
-	"arriveAirportId": "1N7",
-	"departTime": "2019-12-29 18:16:52", # Pass as string in this form.
-	"tokens": 2, # Suggested value.
-	"waitTime": 0.07 # Maximum time beteeen flights, in days.
-}
+    return (flightTime, ePrice, fPrice)
 
-Outputs: """
 @app.route('/flights/search', methods=['GET', 'POST'])  # Working
 def routeFlight():
     def routeFlight_rec(cur_airport, arriveTime, arriveAirportId, tokens=2, waitTime=1):
