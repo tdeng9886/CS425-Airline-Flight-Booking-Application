@@ -59,21 +59,22 @@ def bookingInfo():
 
     def getBookings():
         bookings = db_interface.getBookings(customerId)
-        output = {'bookings': []}
+        output = []
         for booking in bookings:
-            output['bookings'].append(booking[0])
+            output.append(booking[0])
         return output
     customerBookings = getBookings()
 
     def mapFxn(bid):
-        info = db_interface.bookingInfo(bid)
+        info = db_interface.bookingInfo(bid)['flights']
         ret = []
+        print("info: ", info, flush=True)
         for flight in info:
             del flight['bookingId']
             ret.append(flight)
         return ret
 
-    customerBookings = dict(map(lambda bid: [ bid, mapFxn ], customerBookings))
+    customerBookings = dict(map(lambda bid: [ bid, mapFxn(bid) ], customerBookings))
 
     return {
         "data": customerBookings
