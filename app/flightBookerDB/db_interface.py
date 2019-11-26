@@ -114,9 +114,10 @@ def bookingInfo(bookingId):
 
 def deleteBooking(bookingId, customerId):
     c = conn.cursor()
-    c.execute("DELETE FROM bookings WHERE bookingId = %s AND customerId = %s", (bookingId, customerId))
+
+    c.execute("DELETE FROM bookingFlights WHERE bookingId = %s", (bookingId,))
     rows_deleted = c.rowcount
-    c.execute("DELETE FROM flightBookings WHERE bookingId = %s", (bookingId,))
+    c.execute("DELETE FROM bookings WHERE bookingId = %s AND customerId = %s", (bookingId, customerId))
     rows_deleted += c.rowcount
     c.close()
     return bool(rows_deleted)

@@ -170,7 +170,7 @@
                 const fds = await Promise.all(flights.map(f => cs425.api.get('/flights/' + f[0])));
                 const ft = document.getElementById("booked-flights");
                 let flightData = {};
-
+		console.log({flights})
                 for (let i = 0; i < flights.length; i++) {
                     const f = fds[i];
                     ft.innerHTML += `<tr>
@@ -180,13 +180,13 @@
                         <td>$${f.economyPrice.toFixed(2)} Economy, $${f.firstClassPrice.toFixed(2)} 1<sup>st</sup> Class</td>
                         <td>${flights[i][1]}</td>
                     </tr>`;
-                    flightData[flights[i]] = f;
+                    flightData[flights[i][0]] = f;
 
                 }
 
                 const bookings = (await cs425.api.get("/bookings/list")).data;
                 const bt = document.getElementById("bookings-table")
-
+		console.log({bookings, flightData})
                 for (const bid in bookings) {
                     let flights = bookings[bid].map(flightObj => {
                         const f = flightData[flightObj.flightId]
@@ -215,6 +215,7 @@
             async function deleteBooking(bookingId) {
                 const r = await cs425.api.post("/bookings/delete", { bookingId });
                 console.log("deleted: ", r);
+                location.reload();
             }
         </script>
     </body>
