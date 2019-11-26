@@ -47,12 +47,8 @@ def getBooking(customerId=None):
     output = {'bookings': []}
     for booking in bookings:
         output['bookings'].append(booking[0])
-    if output['bookings']:
-        return output
+    return output
 
-    return {
-        "message": "No bookings found."
-    }, 400
 
 
 @app.route('/bookings/list', methods=['GET'])
@@ -60,8 +56,14 @@ def bookingInfo():
     customerId = authUser(request.headers)
     if not customerId:
         return "unauthorized", 401
-    data = request.json
-    customerBookings = getBooking(customerId)
+
+    def getBookings():
+        bookings = db_interface.getBookings(customerId)
+        output = {'bookings': []}
+        for booking in bookings:
+            output['bookings'].append(booking[0])
+        return output
+    customerBookings = getBookings()
 
     def mapFxn(bid):
         info = db_interface.bookingInfo(bid)
